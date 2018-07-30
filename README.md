@@ -1,4 +1,4 @@
-# my-vue-project
+# simples-crm
 
 > A Vue.js project
 

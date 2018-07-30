@@ -2,6 +2,12 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
+
+    <h3>{{ count }}</h3>
+    <input type="number" class="valueToSum" v-model="valueToSum" />
+    <button @click="sumFunction(valueToSum)">sum</button>
+    <router-view/>
+
     <ul>
       <li>
         <a
@@ -84,13 +90,25 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { SUM } from '@/store/constants'
+
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      valueToSum: 0
     }
-  }
+  },
+  methods: {
+    sumFunction (value) {
+      this.$store.commit(SUM, value)
+    }
+  },
+  computed: mapState({
+    count: state => state.count
+  })
 }
 </script>
 
@@ -109,5 +127,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.valueToSum {
+  width: 50px;
 }
 </style>
