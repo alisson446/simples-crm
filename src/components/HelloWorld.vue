@@ -91,7 +91,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { SUM } from '@/store/constants'
+import { SUM } from '@/store/mutations'
 
 export default {
   name: 'HelloWorld',
@@ -107,28 +107,30 @@ export default {
     }
   },
   computed: mapState({
-    count: state => state.count
+    count: state => state.HelloWorld.count
   })
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.valueToSum {
-  width: 50px;
-}
+<style lang="scss" scoped>
+  @charset 'utf-8';
+
+  h1, h2 {
+    font-weight: normal;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+  a {
+    color: #42b983;
+  }
+  .valueToSum {
+    width: 50px;
+  }
 </style>
