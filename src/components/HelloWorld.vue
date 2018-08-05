@@ -6,6 +6,7 @@
     <h3>{{ count }}</h3>
     <input type="number" class="valueToSum" v-model="valueToSum" />
     <button @click="sumFunction(valueToSum)">sum</button>
+    <button @click="addFirebase(valueToSum)">add firebase</button>
     <router-view/>
 
     <ul>
@@ -104,6 +105,9 @@ export default {
   methods: {
     sumFunction (value) {
       this.$store.commit(SUM, value)
+    },
+    addFirebase (value) {
+      this.$store.dispatch('addFirebase', value)
     }
   },
   computed: mapState({
