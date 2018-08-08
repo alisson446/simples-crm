@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import User from '@/components/User'
+import Signup from '@/components/Signup'
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
           component: User
         }
       ]
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
     }
   ]
 })
