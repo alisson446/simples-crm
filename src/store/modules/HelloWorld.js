@@ -1,5 +1,5 @@
 import { SUM } from '../mutations'
-import db from '../../../api/firebase/index'
+import { db } from '../../../api/firebase'
 
 export default {
   state: {

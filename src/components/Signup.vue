@@ -13,8 +13,8 @@
               <md-field :class="getValidationClass('firstName')">
                 <label for="first-name">Nome</label>
                 <md-input name="first-name" id="first-name" autocomplete="given-name" v-model="form.firstName" :disabled="sending" />
-                <span class="md-error" v-if="!$v.form.firstName.required">The first name is required</span>
-                <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span>
+                <span class="md-error" v-if="!$v.form.firstName.required">O nome é obrigatório</span>
+                <span class="md-error" v-else-if="!$v.form.firstName.minlength">Nome inválido</span>
               </md-field>
             </div>
 
@@ -22,8 +22,8 @@
               <md-field :class="getValidationClass('lastName')">
                 <label for="last-name">Sobrenome</label>
                 <md-input name="last-name" id="last-name" autocomplete="family-name" v-model="form.lastName" :disabled="sending" />
-                <span class="md-error" v-if="!$v.form.lastName.required">The last name is required</span>
-                <span class="md-error" v-else-if="!$v.form.lastName.minlength">Invalid last name</span>
+                <span class="md-error" v-if="!$v.form.lastName.required">O sobrenome é obrigatório</span>
+                <span class="md-error" v-else-if="!$v.form.lastName.minlength">Sobrenome inválido</span>
               </md-field>
             </div>
           </div>
@@ -31,19 +31,26 @@
           <md-field :class="getValidationClass('email')">
             <label for="email">Email</label>
             <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
-            <span class="md-error" v-if="!$v.form.email.required">The email is required</span>
-            <span class="md-error" v-else-if="!$v.form.email.email">Invalid email</span>
+            <span class="md-error" v-if="!$v.form.email.required">O email é obrigatório</span>
+            <span class="md-error" v-else-if="!$v.form.email.email">Email inválido</span>
+          </md-field>
+
+          <md-field :class="getValidationClass('password')">
+            <label for="password">Senha</label>
+            <md-input type="password" name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" />
+            <span class="md-error" v-if="!$v.form.password.required">A senha é obrigatório</span>
+            <span class="md-error" v-else-if="!$v.form.password.password">Senha inválida</span>
           </md-field>
         </md-card-content>
 
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <md-button type="submit" class="md-primary" :disabled="sending">Cadastrar</md-button>
+          <md-button type="submit" id="send-button" class="md-raised" :disabled="sending">Cadastrar</md-button>
         </md-card-actions>
       </md-card>
 
-      <md-snackbar :md-active.sync="userSaved">The user {{ lastUser }} was saved with success!</md-snackbar>
+      <md-snackbar :md-active.sync="userSaved">O usuário {{ fullName }} foi criado com sucesso!</md-snackbar>
     </form>
   </div>
 
@@ -51,12 +58,15 @@
 
 <script>
 
+import { mapState } from 'vuex'
 import { validationMixin } from 'vuelidate'
 import {
   required,
   email,
   minLength
 } from 'vuelidate/lib/validators'
+
+import { SIGNUP } from '@/store/actions'
 
 export default {
   name: 'Signup',
@@ -65,11 +75,14 @@ export default {
     form: {
       firstName: null,
       lastName: null,
-      email: null
-    },
-    userSaved: false,
-    sending: false,
-    lastUser: null
+      email: null,
+      password: null
+    }
+  }),
+  computed: mapState({
+    fullName: state => state.Signup.userName,
+    userSaved: state => state.Signup.userSaved,
+    sending: state => state.Signup.sending
   }),
   validations: {
     form: {
@@ -84,6 +97,10 @@ export default {
       email: {
         required,
         email
+      },
+      password: {
+        required,
+        minLength: minLength(6)
       }
     }
   },
@@ -97,22 +114,12 @@ export default {
         }
       }
     },
-    clearForm () {
-      this.$v.$reset()
-      this.form.firstName = null
-      this.form.lastName = null
-      this.form.email = null
-    },
     saveUser () {
-      this.sending = true
-
-      // Instead of this timeout, here you can call your API
-      window.setTimeout(() => {
-        this.lastUser = `${this.form.firstName} ${this.form.lastName}`
-        this.userSaved = true
-        this.sending = false
-        this.clearForm()
-      }, 1500)
+      this.$store.dispatch(SIGNUP, {
+        fullName: `${this.form.firstName} ${this.form.lastName}`,
+        email: this.form.email,
+        password: this.form.password
+      })
     },
     validateUser () {
       this.$v.$touch()
@@ -130,10 +137,10 @@ export default {
 
   .md-card {
     margin: 100px auto;
+    padding: 10px;
   }
 
   .md-card-content {
-    overflow-x: hidden;
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -143,6 +150,11 @@ export default {
     top: 0;
     right: 0;
     left: 0;
+  }
+
+  #send-button {
+    background-color: #237b90;
+    color: white
   }
 
 </style>
