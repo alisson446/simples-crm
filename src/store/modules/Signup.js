@@ -1,18 +1,22 @@
-import { SIGNUP } from '../actions'
+import { SIGNUP, CHECK_FIELD_VALUE_EXISTS } from '../actions'
 import { USER_CREATED } from '../mutations'
 import { auth, db } from '../../../api/firebase'
 
 export default {
   state: {
     authUserId: null,
+    userAccount: null,
     userName: null,
     userEmail: null,
+    userAccountExists: false,
+    emailExists: false,
     userSaved: false,
     sending: false
   },
   mutations: {
     [USER_CREATED] (state, payload) {
       state.authUserId = payload.authUserId
+      state.userAccount = payload.userAccount
       state.userName = payload.userName
       state.userEmail = payload.userEmail
       state.userSaved = true
@@ -20,8 +24,24 @@ export default {
     }
   },
   actions: {
+    [CHECK_FIELD_VALUE_EXISTS] ({ state }, payload) {
+      const { field, value } = payload
+
+      return db.collection('users').where(field, '==', value).get()
+        .then(function (docs) {
+          state[`${field}Exists`] = false
+
+          docs.forEach(function (doc) {
+            state[`${field}Exists`] = doc.exists
+          })
+        })
+        .catch(function (error) {
+          console.error('Error getting documents: ', error)
+          state[`${field}Exists`] = false
+        })
+    },
     [SIGNUP] ({ commit, state }, payload) {
-      const { fullName, email, password } = payload
+      const { userAccount, name, email, password } = payload
       state.sending = true
 
       // Authentication
@@ -31,13 +51,13 @@ export default {
 
           // Creating user in database
           db.doc(`users/${authUserId}`).set({
-            name: fullName,
+            userAccount,
+            name,
             email,
             password
           })
             .then(function () {
-              console.log('Document written with ID: ', authUserId)
-              commit(USER_CREATED, { authUserId, name, email })
+              commit(USER_CREATED, payload)
             })
             .catch(function (error) {
               console.error('Error adding document: ', error)
@@ -46,8 +66,8 @@ export default {
         })
         .catch(function (error) {
           // Handle Errors here.
-          console.log(error.code)
-          console.log(error.message)
+          console.error(error.code)
+          console.error(error.message)
           state.sending = false
         })
     }
