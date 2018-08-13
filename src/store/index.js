@@ -5,6 +5,7 @@ import 'vue-material/dist/vue-material.min.css'
 
 import HelloWorld from './modules/HelloWorld'
 import Signup from './modules/Signup'
+import Signin from './modules/Signin'
 
 Vue.use(Vuex)
 Vue.use(VueMaterial)
@@ -12,6 +13,7 @@ Vue.use(VueMaterial)
 export default new Vuex.Store({
   modules: {
     HelloWorld,
-    Signup
+    Signup,
+    Signin
   }
 })

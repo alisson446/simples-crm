@@ -4,52 +4,30 @@
     <form novalidate class="md-layout" @submit.prevent="validateUser">
       <md-card class="md-layout-item md-size-35 md-small-size-100 md-accent">
         <md-card-header>
-          <div class="md-title">Cadastre-se</div>
+          <div class="md-title">Login</div>
         </md-card-header>
 
         <md-card-content>
-          <div class="md-layout md-gutter">
-            <div class="md-layout-item md-small-size-100">
-              <md-field :class="getValidationClass('userAccount')">
-                <label for="userAccount">Usuário</label>
-                <md-input name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
-                <span class="md-error" v-if="!$v.form.userAccount.required">O nome de usuário é obrigatório</span>
-                <span class="md-error" v-else-if="userAccountExists">Nome de usuário já existente</span>
-              </md-field>
-            </div>
-
-            <div class="md-layout-item md-small-size-100">
-              <md-field :class="getValidationClass('name')">
-                <label for="name">Nome</label>
-                <md-input name="name" id="name" autocomplete="family-name" v-model="form.name" :disabled="sending" />
-                <span class="md-error" v-if="!$v.form.name.required">O nome é obrigatório</span>
-                <span class="md-error" v-else-if="!$v.form.name.minlength">Nome deve conter pelo menos 3 dígitos</span>
-              </md-field>
-            </div>
-          </div>
-
-          <md-field :class="getValidationClass('email')">
-            <label for="email">Email</label>
-            <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
-            <span class="md-error" v-if="!$v.form.email.required">O email é obrigatório</span>
-            <span class="md-error" v-else-if="emailExists">Email já existente</span>
+          <md-field :class="getValidationClass('userAccount')">
+            <label for="userAccount">Usuário ou Email</label>
+            <md-input name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
+            <span class="md-error" v-if="!$v.form.userAccount.required">O usuário ou email é obrigatório</span>
           </md-field>
 
           <md-field :class="getValidationClass('password')">
             <label for="password">Senha</label>
             <md-input type="password" name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" />
             <span class="md-error" v-if="!$v.form.password.required">A senha é obrigatória</span>
-            <span class="md-error" v-else-if="!$v.form.password.minLength">A senha deve conter pelo menos 6 dígitos</span>
           </md-field>
         </md-card-content>
 
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <div id="signin-label">Já possui uma conta?
-            <a href="#/signin">Logue-se</a>
+          <div id="signup-label">Não possui uma conta?
+            <a href="#/signup">Cadastre-se</a>
           </div>
-          <md-button type="submit" id="send-button" class="md-raised" :disabled="sending">Cadastrar</md-button>
+          <md-button type="submit" id="send-button" class="md-raised" :disabled="sending">Entrar</md-button>
         </md-card-actions>
       </md-card>
 
@@ -132,13 +110,6 @@ export default {
         }
       }
     },
-    clearForm () {
-      this.$v.$reset()
-      this.form.userAccount = null
-      this.form.name = null
-      this.form.email = null
-      this.form.password = null
-    },
     saveUser () {
       this.$store.dispatch(SIGNUP, {
         userAccount: `${this.form.userAccount}`,
@@ -146,9 +117,6 @@ export default {
         email: this.form.email,
         password: this.form.password
       })
-        .then(() => {
-          this.clearForm()
-        })
     },
     validateUser () {
       this.$v.$touch()
@@ -165,7 +133,7 @@ export default {
   @charset 'utf-8';
 
   .md-card {
-    margin: 100px auto;
+    margin: 130px auto;
     padding: 10px;
   }
 
@@ -186,8 +154,8 @@ export default {
     color: white
   }
 
-  #signin-label {
-    margin-right: 130px;
+  #signup-label {
+    margin-right: 115px;
   }
 
 </style>

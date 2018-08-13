@@ -1,2 +1,3 @@
 export const SIGNUP = 'SIGNUP'
+export const SIGNIN = 'SIGNIN'
 export const CHECK_FIELD_VALUE_EXISTS = 'CHECK_FIELD_VALUE_EXISTS'
