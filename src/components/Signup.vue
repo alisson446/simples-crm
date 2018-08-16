@@ -10,9 +10,9 @@
         <md-card-content>
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-small-size-100">
-              <md-field :class="getValidationClass('userAccount')">
+              <md-field :class="$v.form.userAccount.required ? userAccountClass : getValidationClass('userAccount')">
                 <label for="userAccount">Usuário</label>
-                <md-input name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
+                <md-input :onkeypress="checkFieldValueExists('userAccount')" name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
                 <span class="md-error" v-if="!$v.form.userAccount.required">O nome de usuário é obrigatório</span>
                 <span class="md-error" v-else-if="userAccountExists">Nome de usuário já existente</span>
               </md-field>
@@ -28,9 +28,9 @@
             </div>
           </div>
 
-          <md-field :class="getValidationClass('email')">
+          <md-field :class="$v.form.email.required ? emailClass : getValidationClass('email')">
             <label for="email">Email</label>
-            <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
+            <md-input type="email" :onkeypress="checkFieldValueExists('email')" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
             <span class="md-error" v-if="!$v.form.email.required">O email é obrigatório</span>
             <span class="md-error" v-else-if="emailExists">Email já existente</span>
           </md-field>
@@ -83,7 +83,11 @@ export default {
       name: null,
       email: null,
       password: null
-    }
+    },
+    prevUserAccountValue: null,
+    prevEmailValue: null,
+    userAccountClass: null,
+    emailClass: null
   }),
   computed: mapState({
     userAccountExists: state => state.Signup.userAccountExists,
@@ -112,24 +116,35 @@ export default {
     }
   },
   methods: {
-    getValidationClass (fieldName) {
+    isInvalid (fieldName) {
       const field = this.$v.form[fieldName]
-      let fieldValueExists = false
+      return field && field.$invalid && field.$dirty
+    },
+    getValidationClass (fieldName) {
+      return {
+        'md-invalid': this.isInvalid(fieldName)
+      }
+    },
+    checkFieldValueExists (fieldName) {
+      // Check if previous value typed is equal to current
+      if (
+        (fieldName === 'userAccount' && this.prevUserAccountValue !== this.form.userAccount) ||
+        (fieldName === 'email' && this.prevEmailValue !== this.form.email)
+      ) {
+        this.prevUserAccountValue = this.form.userAccount
+        this.prevEmailValue = this.form.email
 
-      // Check if field value already exists
-      if (fieldName === 'userAccount' || fieldName === 'email') {
+        // Check if value exists in database
         this.$store.dispatch(CHECK_FIELD_VALUE_EXISTS, {
           field: fieldName,
           value: this.form[fieldName]
         })
-
-        fieldValueExists = this[`${fieldName}Exists`]
-      }
-
-      if (field) {
-        return {
-          'md-invalid': (field.$invalid && field.$dirty) || fieldValueExists
-        }
+          .then(() => {
+            // Set property class like valid or not
+            this[`${fieldName}Class`] = {
+              'md-invalid': this.isInvalid(fieldName) || this[`${fieldName}Exists`]
+            }
+          })
       }
     },
     clearForm () {
