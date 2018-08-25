@@ -51,10 +51,11 @@ export default {
       state.sending = true
 
       return new Promise((resolve, reject) => {
-        // Authentication
+        // Creating authentication token
         auth.createUserWithEmailAndPassword(email, password)
           .then(function () {
             const authUserId = auth.currentUser.uid
+            const fullPayload = { ...payload, authUserId }
 
             // Creating user in database
             db.doc(`users/${authUserId}`).set({
@@ -64,7 +65,7 @@ export default {
               password
             })
               .then(function () {
-                commit(USER_CREATED, payload)
+                commit(USER_CREATED, fullPayload)
                 resolve()
               })
               .catch(function (error) {

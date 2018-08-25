@@ -1,5 +1,5 @@
 <template>
-  <div class='signup'>
+  <div class='signin'>
 
     <form novalidate class="md-layout" @submit.prevent="validateUser">
       <md-card class="md-layout-item md-size-35 md-small-size-100 md-accent">
@@ -8,30 +8,30 @@
         </md-card-header>
 
         <md-card-content>
-          <md-field :class="getValidationClass('userAccount')">
-            <label for="userAccount">Usuário ou Email</label>
-            <md-input name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
-            <span class="md-error" v-if="!$v.form.userAccount.required">O usuário ou email é obrigatório</span>
+          <md-field :class="getValidationClass('userOrEmail')">
+            <label for="userOrEmail">Usuário ou Email</label>
+            <md-input name="userOrEmail" id="userOrEmail" autocomplete="given-name" v-model="form.userOrEmail" :disabled="checking" />
+            <span class="md-error" v-if="!$v.form.userOrEmail.required">O usuário ou email é obrigatório</span>
           </md-field>
 
           <md-field :class="getValidationClass('password')">
             <label for="password">Senha</label>
-            <md-input type="password" name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" />
+            <md-input type="password" name="password" id="password" autocomplete="password" v-model="form.password" :disabled="checking" />
             <span class="md-error" v-if="!$v.form.password.required">A senha é obrigatória</span>
           </md-field>
         </md-card-content>
 
-        <md-progress-bar md-mode="indeterminate" v-if="sending" />
+        <md-progress-bar md-mode="indeterminate" v-if="checking" />
 
         <md-card-actions>
-          <div id="signup-label">Não possui uma conta?
-            <a href="#/signup">Cadastre-se</a>
+          <div id="signin-label">Não possui uma conta?
+            <a href="#/signin">Cadastre-se</a>
           </div>
-          <md-button type="submit" id="send-button" class="md-raised" :disabled="sending">Entrar</md-button>
+          <md-button type="submit" id="send-button" class="md-raised" :disabled="checking">Entrar</md-button>
         </md-card-actions>
       </md-card>
 
-      <md-snackbar :md-active.sync="userSaved">O usuário {{ userAccount }} foi criado com sucesso!</md-snackbar>
+      <md-snackbar :md-active.sync="userLogged">O usuário {{ userAccount }} está logado!</md-snackbar>
     </form>
   </div>
 
@@ -43,45 +43,31 @@ import { mapState } from 'vuex'
 import { validationMixin } from 'vuelidate'
 import {
   required,
-  email,
   minLength
 } from 'vuelidate/lib/validators'
 
 import {
-  SIGNUP,
-  CHECK_FIELD_VALUE_EXISTS
+  SIGNIN
 } from '@/store/actions'
 
 export default {
-  name: 'Signup',
+  name: 'Signin',
   mixins: [validationMixin],
   data: () => ({
     form: {
-      userAccount: null,
-      name: null,
-      email: null,
+      userOrEmail: null,
       password: null
     }
   }),
   computed: mapState({
-    userAccountExists: state => state.Signup.userAccountExists,
-    emailExists: state => state.Signup.emailExists,
-    userAccount: state => state.Signup.userAccount,
-    userSaved: state => state.Signup.userSaved,
-    sending: state => state.Signup.sending
+    userAccount: state => state.Signin.userAccount,
+    userLogged: state => state.Signin.userLogged,
+    checking: state => state.Signin.checking
   }),
   validations: {
     form: {
-      userAccount: {
+      userOrEmail: {
         required
-      },
-      name: {
-        required,
-        minLength: minLength(3)
-      },
-      email: {
-        required,
-        email
       },
       password: {
         required,
@@ -92,29 +78,16 @@ export default {
   methods: {
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
-      let fieldValueExists = false
-
-      // Check if field value already exists
-      if (fieldName === 'userAccount' || fieldName === 'email') {
-        this.$store.dispatch(CHECK_FIELD_VALUE_EXISTS, {
-          field: fieldName,
-          value: this.form[fieldName]
-        })
-
-        fieldValueExists = this[`${fieldName}Exists`]
-      }
 
       if (field) {
         return {
-          'md-invalid': (field.$invalid && field.$dirty) || fieldValueExists
+          'md-invalid': field.$invalid && field.$dirty
         }
       }
     },
-    saveUser () {
-      this.$store.dispatch(SIGNUP, {
-        userAccount: `${this.form.userAccount}`,
-        name: `${this.form.name}`,
-        email: this.form.email,
+    login () {
+      this.$store.dispatch(SIGNIN, {
+        userOrEmail: `${this.form.userOrEmail}`,
         password: this.form.password
       })
     },
@@ -122,7 +95,7 @@ export default {
       this.$v.$touch()
 
       if (!this.$v.$invalid) {
-        this.saveUser()
+        this.login()
       }
     }
   }
@@ -154,7 +127,7 @@ export default {
     color: white
   }
 
-  #signup-label {
+  #signin-label {
     margin-right: 115px;
   }
 
