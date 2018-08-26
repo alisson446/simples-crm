@@ -6,7 +6,8 @@ export default {
   state: {
     userAccount: null,
     userLogged: false,
-    checking: false
+    checking: false,
+    loginError: false
   },
   mutations: {
     [USER_LOGGED] (state, payload) {
@@ -19,6 +20,7 @@ export default {
     [SIGNIN] ({ commit, state }, payload) {
       const { userOrEmail, password } = payload
       state.checking = true
+      state.loginError = false
 
       // Checking authentication
       auth.signInWithEmailAndPassword(userOrEmail, password)
@@ -28,8 +30,9 @@ export default {
         .catch(function (error) {
           // Handle Errors here.
           console.error(error.code)
-          console.error(error.code)
+          console.error(error.message)
           state.checking = false
+          state.loginError = true
         })
     }
   }

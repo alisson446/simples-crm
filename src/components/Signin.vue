@@ -25,13 +25,14 @@
 
         <md-card-actions>
           <div id="signin-label">Não possui uma conta?
-            <a href="#/signin">Cadastre-se</a>
+            <a href="#/signup">Cadastre-se</a>
           </div>
           <md-button type="submit" id="send-button" class="md-raised" :disabled="checking">Entrar</md-button>
         </md-card-actions>
       </md-card>
 
       <md-snackbar :md-active.sync="userLogged">O usuário {{ userAccount }} está logado!</md-snackbar>
+      <md-snackbar class="loginError" :md-active.sync="loginError">Usuário ou senha inválidos!</md-snackbar>
     </form>
   </div>
 
@@ -41,14 +42,9 @@
 
 import { mapState } from 'vuex'
 import { validationMixin } from 'vuelidate'
-import {
-  required,
-  minLength
-} from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 
-import {
-  SIGNIN
-} from '@/store/actions'
+import { SIGNIN } from '@/store/actions'
 
 export default {
   name: 'Signin',
@@ -62,7 +58,8 @@ export default {
   computed: mapState({
     userAccount: state => state.Signin.userAccount,
     userLogged: state => state.Signin.userLogged,
-    checking: state => state.Signin.checking
+    checking: state => state.Signin.checking,
+    loginError: state => state.Signin.loginError
   }),
   validations: {
     form: {
@@ -70,8 +67,7 @@ export default {
         required
       },
       password: {
-        required,
-        minLength: minLength(6)
+        required
       }
     }
   },
@@ -79,10 +75,8 @@ export default {
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
 
-      if (field) {
-        return {
-          'md-invalid': field.$invalid && field.$dirty
-        }
+      return {
+        'md-invalid': field && field.$invalid && field.$dirty
       }
     },
     login () {
@@ -129,6 +123,10 @@ export default {
 
   #signin-label {
     margin-right: 115px;
+  }
+
+  .loginError {
+    background-color: #D32F2F;
   }
 
 </style>
