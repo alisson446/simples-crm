@@ -55,8 +55,8 @@
 
       <md-snackbar :md-active.sync="userSaved">O usuário {{ userAccount }} foi criado com sucesso!</md-snackbar>
     </form>
-  </div>
 
+  </div>
 </template>
 
 <script>

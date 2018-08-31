@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import User from '@/components/User'
 import Signup from '@/components/Signup'
 import Signin from '@/components/Signin'
+import Dashboard from '@/components/Dashboard'
 
 Vue.use(Router)
 
@@ -11,14 +12,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      children: [
-        {
-          path: 'user/:name',
-          component: User
-        }
-      ]
+      name: 'Dashboard',
+      component: Dashboard
     },
     {
       path: '/signup',
@@ -29,6 +24,17 @@ export default new Router({
       path: '/signin',
       name: 'Signin',
       component: Signin
+    },
+    {
+      path: '/HelloWorld',
+      name: 'HelloWorld',
+      component: HelloWorld,
+      children: [
+        {
+          path: 'user/:name',
+          component: User
+        }
+      ]
     }
   ]
 })

@@ -24,7 +24,7 @@
         <md-progress-bar md-mode="indeterminate" v-if="checking" />
 
         <md-card-actions>
-          <div id="signin-label">Não possui uma conta?
+          <div id="signup-label">Não possui uma conta?
             <a href="#/signup">Cadastre-se</a>
           </div>
           <md-button type="submit" id="send-button" class="md-raised" :disabled="checking">Entrar</md-button>
@@ -34,8 +34,8 @@
       <md-snackbar :md-active.sync="userLogged">O usuário {{ userAccount }} está logado!</md-snackbar>
       <md-snackbar class="loginError" :md-active.sync="loginError">Usuário ou senha inválidos!</md-snackbar>
     </form>
-  </div>
 
+  </div>
 </template>
 
 <script>
@@ -121,7 +121,7 @@ export default {
     color: white
   }
 
-  #signin-label {
+  #signup-label {
     margin-right: 115px;
   }
 
