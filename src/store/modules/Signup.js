@@ -1,6 +1,7 @@
 import { SIGNUP, CHECK_FIELD_VALUE_EXISTS } from '../actions'
 import { USER_CREATED } from '../mutations'
 import { auth, db } from '../../../api/firebase'
+import router from '@/router'
 
 export default {
   state: {
@@ -21,6 +22,8 @@ export default {
       state.userEmail = payload.userEmail
       state.userSaved = true
       state.sending = false
+
+      router.push('/signin')
     }
   },
   actions: {

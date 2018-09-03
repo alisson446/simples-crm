@@ -1,6 +1,7 @@
 import { SIGNIN } from '../actions'
 import { USER_LOGGED } from '../mutations'
 import { auth } from '../../../api/firebase'
+import router from '@/router'
 
 export default {
   state: {
@@ -14,6 +15,8 @@ export default {
       state.userAccount = payload.userOrEmail
       state.userLogged = true
       state.checking = false
+
+      router.push('/')
     }
   },
   actions: {

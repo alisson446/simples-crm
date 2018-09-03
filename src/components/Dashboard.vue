@@ -53,7 +53,7 @@ export default {
   }
 
   .empty-state {
-    margin-top: 3%
+    margin-top: 5%
   }
 
 </style>
