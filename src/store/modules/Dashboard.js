@@ -1,4 +1,3 @@
-// import { CHECK_AUTH_STATE } from '../actions'
 import { auth } from '../../../api/firebase'
 import router from '@/router'
 

@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Router from 'vue-router'
 
 import HelloWorld from '@/components/HelloWorld'
@@ -6,8 +5,6 @@ import User from '@/components/User'
 import Signup from '@/components/Signup'
 import Signin from '@/components/Signin'
 import Dashboard from '@/components/Dashboard'
-
-Vue.use(Router)
 
 export default new Router({
   routes: [
