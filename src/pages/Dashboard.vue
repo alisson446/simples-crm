@@ -12,10 +12,33 @@
             </md-field>
           </div>
 
-          <div class="md-layout-item md-size-20 md-small-size-100">
-            <md-datepicker md-immediately v-model="selectedDate">
-              <label>Por data</label>
-            </md-datepicker>
+          <div data-app="true" class="md-layout-item md-size-20 md-small-size-100">
+            <v-menu
+              id="date-field"
+              ref="menu"
+              :close-on-content-click="false"
+              v-model="menu"
+              :nudge-right="40"
+              :return-value.sync="date"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <v-text-field
+                slot="activator"
+                v-model="date"
+                label="Por data"
+                prepend-icon="event"
+              ></v-text-field>
+              <v-date-picker locale="pt-br" header-color="grey darken-4" v-model="date" landscape="true">
+                <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="menu = false">Cancelar</v-btn>
+                <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+              </v-date-picker>
+
+            </v-menu>
           </div>
 
           <div class="md-layout-item md-size-10 md-small-size-100">
@@ -55,7 +78,8 @@ export default {
   name: 'Dashboard',
   data: () => ({
     search: null,
-    selectedDate: null,
+    date: null,
+    menu: false,
     options: {
       url: (file) => {
         file = file[0]
@@ -113,6 +137,10 @@ export default {
 
   .empty-state {
     margin-top: 5%
+  }
+
+  #date-field {
+    margin-top: 4px;
   }
 
   #novo-arquivo {

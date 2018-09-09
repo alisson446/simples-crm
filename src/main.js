@@ -4,6 +4,8 @@ import Vue from 'vue'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import VueClip from 'vue-clip'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
 import store from '@/store'
 import router from '@/router'
@@ -11,6 +13,7 @@ import App from './App'
 
 Vue.use(VueMaterial)
 Vue.use(VueClip)
+Vue.use(Vuetify)
 
 Vue.config.productionTip = process.env.NODE_ENV === 'production'
 
