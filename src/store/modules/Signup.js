@@ -1,5 +1,8 @@
-import { SIGNUP, CHECK_FIELD_VALUE_EXISTS } from '../actions'
-import { USER_CREATED } from '../mutations'
+import {
+  SIGNUP,
+  CHECK_FIELD_VALUE_EXISTS,
+  USER_CREATED
+} from '../constants'
 import { auth, db } from '../../../api/firebase'
 import router from '@/router'
 

@@ -25,7 +25,7 @@
 
         <md-card-actions>
           <div id="signup-label">Não possui uma conta?
-            <a href="#/signup">Cadastre-se</a>
+            <router-link to="/signup">Cadastre-se</router-link>
           </div>
           <md-button type="submit" id="send-button" class="md-raised" :disabled="checking">Entrar</md-button>
         </md-card-actions>
@@ -44,7 +44,7 @@ import { mapState } from 'vuex'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
-import { SIGNIN } from '@/store/actions'
+import { SIGNIN } from '@/store/constants'
 
 export default {
   name: 'Signin',

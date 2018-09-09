@@ -9,7 +9,7 @@
 
         <md-card-content>
           <div class="md-layout md-gutter">
-            <div class="md-layout-item md-small-size-100">
+            <div class="md-layout-item md-size-50 md-small-size-100">
               <md-field :class="$v.form.userAccount.required ? userAccountClass : getValidationClass('userAccount')">
                 <label for="userAccount">Usuário</label>
                 <md-input :onkeypress="checkFieldValueExists('userAccount')" name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
@@ -18,7 +18,7 @@
               </md-field>
             </div>
 
-            <div class="md-layout-item md-small-size-100">
+            <div class="md-layout-item md-size-50 md-small-size-100">
               <md-field :class="getValidationClass('name')">
                 <label for="name">Nome</label>
                 <md-input name="name" id="name" autocomplete="family-name" v-model="form.name" :disabled="sending" />
@@ -47,7 +47,7 @@
 
         <md-card-actions>
           <div id="signin-label">Já possui uma conta?
-            <a href="#/signin">Logue-se</a>
+            <router-link to="/signin">Logue-se</router-link>
           </div>
           <md-button type="submit" id="send-button" class="md-raised" :disabled="sending">Cadastrar</md-button>
         </md-card-actions>
@@ -72,7 +72,7 @@ import {
 import {
   SIGNUP,
   CHECK_FIELD_VALUE_EXISTS
-} from '@/store/actions'
+} from '@/store/constants'
 
 export default {
   name: 'Signup',

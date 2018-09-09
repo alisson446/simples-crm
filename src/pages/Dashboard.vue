@@ -12,7 +12,7 @@
             </md-field>
           </div>
 
-          <div class="md-layout-item md-size-21 md-small-size-100">
+          <div class="md-layout-item md-size-20 md-small-size-100">
             <md-datepicker md-immediately v-model="selectedDate">
               <label>Por data</label>
             </md-datepicker>

@@ -92,7 +92,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { SUM } from '@/store/mutations'
+import { SUM } from '@/store/constants'
 
 export default {
   name: 'HelloWorld',

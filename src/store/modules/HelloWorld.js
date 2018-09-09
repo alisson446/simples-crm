@@ -1,4 +1,4 @@
-import { SUM } from '../mutations'
+import { SUM } from '../constants'
 import { db } from '../../../api/firebase'
 
 export default {
