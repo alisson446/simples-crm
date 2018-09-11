@@ -49,7 +49,7 @@
           <div id="signin-label">Já possui uma conta?
             <router-link to="/signin">Logue-se</router-link>
           </div>
-          <md-button type="submit" id="send-button" class="md-raised" :disabled="sending">Cadastrar</md-button>
+          <md-button type="submit" id="send-button" class="md-raised" :disabled="sending || checkingField">Cadastrar</md-button>
         </md-card-actions>
       </md-card>
 
@@ -87,7 +87,8 @@ export default {
     prevUserAccountValue: null,
     prevEmailValue: null,
     userAccountClass: null,
-    emailClass: null
+    emailClass: null,
+    checkingField: false
   }),
   computed: mapState({
     userAccountExists: state => state.Signup.userAccountExists,
@@ -133,6 +134,7 @@ export default {
       ) {
         this.prevUserAccountValue = this.form.userAccount
         this.prevEmailValue = this.form.email
+        this.checkingField = true
 
         // Check if value exists in database
         this.$store.dispatch(CHECK_FIELD_VALUE_EXISTS, {
@@ -140,6 +142,8 @@ export default {
           value: this.form[fieldName]
         })
           .then(() => {
+            this.checkingField = false
+
             // Set property class like valid or not
             this[`${fieldName}Class`] = {
               'md-invalid': this.isInvalid(fieldName) || this[`${fieldName}Exists`]

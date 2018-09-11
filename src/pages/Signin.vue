@@ -32,7 +32,7 @@
       </md-card>
 
       <md-snackbar :md-active.sync="userLogged">O usuário {{ userAccount }} está logado!</md-snackbar>
-      <md-snackbar class="loginError" :md-active.sync="loginError">Usuário ou senha inválidos!</md-snackbar>
+      <md-snackbar id="loginError" :md-active.sync="loginError">Usuário ou senha inválidos!</md-snackbar>
     </form>
 
   </div>
@@ -125,7 +125,7 @@ export default {
     margin-right: 115px;
   }
 
-  .loginError {
+  #loginError {
     background-color: #D32F2F;
   }
 
