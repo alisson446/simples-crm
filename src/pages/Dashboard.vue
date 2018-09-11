@@ -114,6 +114,8 @@ export default {
             fileDoc.set({
               name: file.name,
               type: snapshot.contentType,
+              downloadUrl: snapshot.downloadURLs[0],
+              size: snapshot.size,
               postedIn: snapshot.timeCreated
             })
           })
