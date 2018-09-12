@@ -84,7 +84,7 @@
       <md-card class="card-file" v-for="userFile in userFiles" :key="userFile.id">
         <md-card-media-cover md-solid>
           <md-card-media md-ratio="1:1">
-            <img :src="userFile.downloadUrl" alt="Skyscraper">
+            <img :src="userFile.downloadUrl">
           </md-card-media>
 
           <md-card-area>
@@ -94,12 +94,8 @@
             </md-card-header>
 
             <md-card-actions>
-              <md-button class="md-icon-button">
-                <md-icon>favorite</md-icon>
-              </md-button>
-
-              <md-button class="md-icon-button">
-                <md-icon>share</md-icon>
+              <md-button class="md-icon-button" :href="userFile.downloadUrl" target="_blank">
+                <md-icon>cloud_download</md-icon>
               </md-button>
             </md-card-actions>
           </md-card-area>

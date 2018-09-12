@@ -10,6 +10,8 @@ export default {
   mutations: {},
   actions: {
     [FETCH_FILES] ({ state }) {
+      state.userFiles = []
+
       db.collection('files').get()
         .then(function (docs) {
           docs.forEach(function (doc) {
