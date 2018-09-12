@@ -5,12 +5,14 @@ import router from '@/router'
 export default {
   state: {
     userFiles: [],
-    hasFiles: false
+    hasFiles: false,
+    loadingFiles: false
   },
   mutations: {},
   actions: {
     [FETCH_FILES] ({ state }) {
       state.userFiles = []
+      state.loadingFiles = true
 
       db.collection('files').get()
         .then(function (docs) {
@@ -22,6 +24,8 @@ export default {
               })
             }
           })
+
+          state.loadingFiles = false
         })
         .catch(function (error) {
           console.error(error)

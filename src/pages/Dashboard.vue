@@ -103,7 +103,9 @@
       </md-card>
     </div>
 
-    <md-empty-state id="empty-state" v-if="!hasFiles"
+    <md-progress-spinner v-if="true" class="md-accent" md-mode="indeterminate" :md-diameter="100"></md-progress-spinner>
+
+    <md-empty-state id="empty-state" v-if="!hasFiles && !loadingFiles"
       md-rounded
       md-icon="access_time"
       md-label="Nenhum arquivo ainda"
@@ -173,7 +175,8 @@ export default {
   }),
   computed: mapState({
     userFiles: state => state.Dashboard.userFiles,
-    hasFiles: state => state.Dashboard.userFiles.length !== 0
+    hasFiles: state => state.Dashboard.userFiles.length !== 0,
+    loadingFiles: state => state.Dashboard.loadingFiles
   }),
   created () {
     this.$store.dispatch(FETCH_FILES)
@@ -231,6 +234,10 @@ export default {
     margin: 4px;
     display: inline-block;
     vertical-align: top;
+  }
+
+  .md-progress-spinner {
+    margin: 15%;
   }
 
 </style>
