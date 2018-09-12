@@ -1,7 +1,23 @@
 <template>
   <div class='dashboard'>
 
-    <form novalidate class="md-layout">
+    <md-menu id="user-options-menu" md-size="auto" md-direction="bottom-end" :md-offset-y=1 :md-active.sync="toggleCard">
+      <md-button class="md-icon-button md-accent" md-menu-trigger>
+        <md-icon>person</md-icon>
+      </md-button>
+
+      <md-menu-content>
+        <md-menu-item>
+          <button class="user-options-item">Configurações</button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <button class="user-options-item" @click="signout">Sair</button>
+        </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+
+    <form id="form-search" novalidate class="md-layout">
       <md-content id="search-content" class="md-layout-item md-size-80 md-small-size-100 md-accent">
 
         <div class="md-layout md-gutter">
@@ -32,7 +48,7 @@
                 label="Por data"
                 prepend-icon="event"
               ></v-text-field>
-              <v-date-picker locale="pt-br" header-color="grey darken-4" v-model="date" landscape="true">
+              <v-date-picker locale="pt-br" header-color="grey darken-4" v-model="date" :landscape=true>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="menu = false">Cancelar</v-btn>
                 <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
@@ -73,6 +89,7 @@
 
 <script>
 import { db, storageRef } from '../../api/firebase'
+import { SIGNOUT } from '@/store/constants'
 
 export default {
   name: 'Dashboard',
@@ -80,6 +97,7 @@ export default {
     search: null,
     date: null,
     menu: false,
+    toggleCard: false,
     options: {
       url: (file) => {
         file = file[0]
@@ -124,7 +142,10 @@ export default {
     }
   }),
   methods: {
-    complete (file) {}
+    complete (file) {},
+    signout () {
+      this.$store.dispatch(SIGNOUT)
+    }
   }
 }
 </script>
@@ -132,8 +153,12 @@ export default {
 <style lang="scss" scoped>
   @charset 'utf-8';
 
+  #form-search {
+    width: 100%;
+  }
+
   #search-content {
-    margin: 20px auto;
+    margin: auto;
     padding: 0px 20px 0px 20px;
   }
 
@@ -148,6 +173,15 @@ export default {
   #novo-arquivo {
     margin-top: 18px;
     background-color: #237b90;
+  }
+
+  #user-options-menu {
+    float: right;
+    margin-right: 1%;
+  }
+
+  .user-options-item {
+    margin: auto
   }
 
 </style>

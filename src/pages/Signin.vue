@@ -31,7 +31,6 @@
         </md-card-actions>
       </md-card>
 
-      <md-snackbar :md-active.sync="userLogged">O usuário {{ userAccount }} está logado!</md-snackbar>
       <md-snackbar id="loginError" :md-active.sync="loginError">Usuário ou senha inválidos!</md-snackbar>
     </form>
 
@@ -56,7 +55,6 @@ export default {
     }
   }),
   computed: mapState({
-    userAccount: state => state.Signin.userAccount,
     userLogged: state => state.Signin.userLogged,
     checking: state => state.Signin.checking,
     loginError: state => state.Signin.loginError
