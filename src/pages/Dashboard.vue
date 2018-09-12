@@ -1,7 +1,8 @@
 <template>
   <div class='dashboard'>
 
-    <md-menu id="user-options-menu" md-size="auto" md-direction="bottom-end" :md-offset-y=1 :md-active.sync="toggleCard">
+    <!-- start User Options -->
+    <md-menu id="user-options-menu" md-size="auto" md-direction="bottom-end" :md-offset-y=1 :md-active.sync="clickUserOptions">
       <md-button class="md-icon-button md-accent" md-menu-trigger>
         <md-icon>person</md-icon>
       </md-button>
@@ -16,7 +17,9 @@
         </md-menu-item>
       </md-menu-content>
     </md-menu>
+    <!-- end user Options -->
 
+    <!-- start Form Search -->
     <form id="form-search" novalidate class="md-layout">
       <md-content id="search-content" class="md-layout-item md-size-80 md-small-size-100 md-accent">
 
@@ -73,23 +76,54 @@
         </div>
 
       </md-content>
-
-      <md-empty-state class="empty-state"
-        md-rounded
-        md-icon="access_time"
-        md-label="Nenhum arquivo ainda"
-        md-description="Seja o primeiro a inserir um arquivo, é fácil!"
-        :md-size=350
-      >
-      </md-empty-state>
     </form>
+    <!-- end Form Search -->
+
+    <!-- start Files Content -->
+    <div id="files-content" v-if="hasFiles">
+      <md-card class="card-file" v-for="userFile in userFiles" :key="userFile.id">
+        <md-card-media-cover md-solid>
+          <md-card-media md-ratio="1:1">
+            <img :src="userFile.downloadUrl" alt="Skyscraper">
+          </md-card-media>
+
+          <md-card-area>
+            <md-card-header>
+              <span class="md-title">{{ userFile.name }}</span>
+              <span class="md-subhead">{{ userFile.type }}</span>
+            </md-card-header>
+
+            <md-card-actions>
+              <md-button class="md-icon-button">
+                <md-icon>favorite</md-icon>
+              </md-button>
+
+              <md-button class="md-icon-button">
+                <md-icon>share</md-icon>
+              </md-button>
+            </md-card-actions>
+          </md-card-area>
+        </md-card-media-cover>
+      </md-card>
+    </div>
+
+    <md-empty-state id="empty-state" v-if="!hasFiles"
+      md-rounded
+      md-icon="access_time"
+      md-label="Nenhum arquivo ainda"
+      md-description="Seja o primeiro a inserir um arquivo, é fácil!"
+      :md-size=350
+    >
+    </md-empty-state>
+    <!-- end Files Content -->
 
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { db, storageRef } from '../../api/firebase'
-import { SIGNOUT } from '@/store/constants'
+import { FETCH_FILES, SIGNOUT } from '@/store/constants'
 
 export default {
   name: 'Dashboard',
@@ -97,7 +131,7 @@ export default {
     search: null,
     date: null,
     menu: false,
-    toggleCard: false,
+    clickUserOptions: false,
     options: {
       url: (file) => {
         file = file[0]
@@ -141,6 +175,13 @@ export default {
       }
     }
   }),
+  computed: mapState({
+    userFiles: state => state.Dashboard.userFiles,
+    hasFiles: state => state.Dashboard.userFiles.length !== 0
+  }),
+  created () {
+    this.$store.dispatch(FETCH_FILES)
+  },
   methods: {
     complete (file) {},
     signout () {
@@ -162,8 +203,13 @@ export default {
     padding: 0px 20px 0px 20px;
   }
 
-  .empty-state {
+  #empty-state {
     margin-top: 5%
+  }
+
+  #files-content {
+    width: 80%;
+    margin: 3% auto
   }
 
   #date-field {
@@ -182,6 +228,13 @@ export default {
 
   .user-options-item {
     margin: auto
+  }
+
+  .card-file {
+    width: 320px;
+    margin: 4px;
+    display: inline-block;
+    vertical-align: top;
   }
 
 </style>
