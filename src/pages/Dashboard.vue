@@ -103,7 +103,7 @@
       </md-card>
     </div>
 
-    <md-progress-spinner v-if="true" class="md-accent" md-mode="indeterminate" :md-diameter="100"></md-progress-spinner>
+    <md-progress-spinner v-if="loadingFiles" class="md-accent" md-mode="indeterminate" :md-diameter="100"></md-progress-spinner>
 
     <md-empty-state id="empty-state" v-if="!hasFiles && !loadingFiles"
       md-rounded
