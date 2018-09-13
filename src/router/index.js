@@ -41,6 +41,7 @@ const router = new VueRouter({
   ]
 })
 
+// Check if user is authenticated in each route
 router.beforeEach((to, from, next) => {
   if (to.path !== '/signin' && to.path !== '/signup') {
     auth.onAuthStateChanged(function (user) {

@@ -20,7 +20,7 @@
     <!-- end user Options -->
 
     <!-- start Form Search -->
-    <form id="form-search" novalidate class="md-layout">
+    <form id="form-search" novalidate class="md-layout" @submit.prevent="() => false">
       <md-content id="search-content" class="md-layout-item md-size-80 md-small-size-100 md-accent">
 
         <div class="md-layout md-gutter">
@@ -121,7 +121,7 @@
 <script>
 import { mapState } from 'vuex'
 import { db, storageRef } from '../../api/firebase'
-import { FETCH_FILES, SIGNOUT } from '@/store/constants'
+import { ON_CHECKING_FILES, SIGNOUT } from '@/store/constants'
 
 export default {
   name: 'Dashboard',
@@ -179,7 +179,7 @@ export default {
     loadingFiles: state => state.Dashboard.loadingFiles
   }),
   created () {
-    this.$store.dispatch(FETCH_FILES)
+    this.$store.dispatch(ON_CHECKING_FILES)
   },
   methods: {
     complete (file) {},

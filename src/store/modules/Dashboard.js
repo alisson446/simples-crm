@@ -1,34 +1,35 @@
 import { auth, db } from '../../../api/firebase'
-import { FETCH_FILES, SIGNOUT } from '../constants'
+import { ON_CHECKING_FILES, SIGNOUT } from '../constants'
 import router from '@/router'
 
 export default {
   state: {
     userFiles: [],
-    hasFiles: false,
     loadingFiles: false
   },
   mutations: {},
   actions: {
-    [FETCH_FILES] ({ state }) {
+    [ON_CHECKING_FILES] ({ state }) {
       state.userFiles = []
       state.loadingFiles = true
 
-      db.collection('files').get()
-        .then(function (docs) {
-          docs.forEach(function (doc) {
-            if (doc.data().name) {
-              state.userFiles.push({
-                id: doc.id,
-                ...doc.data()
-              })
+      db.collection('files')
+        .onSnapshot(function (docs) {
+          docs.docChanges.forEach(function (change) {
+            const { doc, type } = change
+
+            switch (type) {
+              case 'added':
+                if (doc.data().name) {
+                  state.userFiles.push({ id: doc.id, ...doc.data() })
+                }
+                break
+              case 'removed':
+                break
             }
           })
 
           state.loadingFiles = false
-        })
-        .catch(function (error) {
-          console.error(error)
         })
     },
     [SIGNOUT] () {
