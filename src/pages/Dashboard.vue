@@ -61,12 +61,13 @@
           </div>
 
           <div class="md-layout-item md-size-10 md-small-size-100">
-            <vue-clip :on-drag-enter="complete" :options="options">
+            <vue-clip :options="options">
               <template slot="clip-uploader-action">
                 <div>
                   <div class="dz-message">
                     <md-button type="file" id="novo-arquivo" class="md-icon-button md-raised">
                       <md-icon>add</md-icon>
+                      <md-tooltip md-direction="top">Novo Arquivo</md-tooltip>
                     </md-button>
                   </div>
                 </div>
@@ -96,6 +97,11 @@
             <md-card-actions>
               <md-button class="md-icon-button" :href="userFile.downloadUrl" target="_blank">
                 <md-icon>cloud_download</md-icon>
+                <md-tooltip md-direction="top">Baixar</md-tooltip>
+              </md-button>
+              <md-button class="md-icon-button" @click="deleteFile(userFile.id)">
+                <md-icon>delete</md-icon>
+                <md-tooltip md-direction="top">Remover</md-tooltip>
               </md-button>
             </md-card-actions>
           </md-card-area>
@@ -121,7 +127,7 @@
 <script>
 import { mapState } from 'vuex'
 import { db, storageRef } from '../../api/firebase'
-import { ON_CHECKING_FILES, SIGNOUT } from '@/store/constants'
+import { ON_CHECKING_FILES, DELETE_FILE, SIGNOUT } from '@/store/constants'
 
 export default {
   name: 'Dashboard',
@@ -182,7 +188,9 @@ export default {
     this.$store.dispatch(ON_CHECKING_FILES)
   },
   methods: {
-    complete (file) {},
+    deleteFile (fileId) {
+      this.$store.dispatch(DELETE_FILE, fileId)
+    },
     signout () {
       this.$store.dispatch(SIGNOUT)
     }
