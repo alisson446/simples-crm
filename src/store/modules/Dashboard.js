@@ -1,14 +1,62 @@
 import { auth, db, storageRef } from '../../../api/firebase'
-import { ON_CHECKING_FILES, DELETE_FILE, SIGNOUT } from '../constants'
+import {
+  UPLOAD_FILE,
+  ON_CHECKING_FILES,
+  DELETE_FILE,
+  SIGNOUT
+} from '../constants'
 import router from '@/router'
 
 export default {
   state: {
     userFiles: [],
-    loadingFiles: false
+    loadingFiles: false,
+    authUserId: null
   },
   mutations: {},
   actions: {
+    [UPLOAD_FILE] ({ state }, file) {
+      const blobFile = new Blob(
+        [file],
+        { type: file.type }
+      )
+
+      // Create a file document reference to use in upload and store metadata
+      const fileDoc = db.collection('files').doc()
+      const uploadTask = storageRef.child(`files/${fileDoc.id}`).put(blobFile)
+
+      uploadTask.on('state_changed', function (snapshot) {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        console.log('Upload is ' + progress + '% done')
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused')
+            break
+          case 'running':
+            console.log('Upload is running')
+            break
+        }
+      }, function (error) {
+        console.error(error)
+      }, function () {
+        // Handle successful uploads on complete
+        uploadTask.snapshot.ref.getMetadata().then(function (snapshot) {
+          fileDoc.set({
+            name: file.name,
+            type: snapshot.contentType,
+            downloadUrl: snapshot.downloadURLs[0],
+            size: snapshot.size,
+            postedIn: snapshot.timeCreated
+          })
+            .then(function () {
+              fileDoc.collection('followers').doc(state.authUserId)
+                .set({ permissionLevel: 'owner' })
+            })
+        })
+      })
+    },
     [ON_CHECKING_FILES] ({ state }) {
       state.userFiles = []
       state.loadingFiles = true

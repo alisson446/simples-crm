@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 import { auth } from '../../api/firebase'
 
 import HelloWorld from '@/pages/HelloWorld'
@@ -50,6 +51,7 @@ router.beforeEach((to, from, next) => {
         router.push('/signin')
       }
 
+      store.state.Dashboard.authUserId = user.uid
       next()
     })
   } else {

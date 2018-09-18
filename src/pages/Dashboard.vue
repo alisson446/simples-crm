@@ -61,7 +61,7 @@
           </div>
 
           <div class="md-layout-item md-size-10 md-small-size-100">
-            <vue-clip :options="options">
+            <vue-clip :options="options" :on-added-file="addedFile">
               <template slot="clip-uploader-action">
                 <div>
                   <div class="dz-message">
@@ -126,8 +126,12 @@
 
 <script>
 import { mapState } from 'vuex'
-import { db, storageRef } from '../../api/firebase'
-import { ON_CHECKING_FILES, DELETE_FILE, SIGNOUT } from '@/store/constants'
+import {
+  UPLOAD_FILE,
+  ON_CHECKING_FILES,
+  DELETE_FILE,
+  SIGNOUT
+} from '@/store/constants'
 
 export default {
   name: 'Dashboard',
@@ -137,46 +141,7 @@ export default {
     menu: false,
     clickUserOptions: false,
     options: {
-      url: (file) => {
-        file = file[0]
-
-        const blobFile = new Blob(
-          [file],
-          { type: file.type }
-        )
-
-        // Create a file document reference to use in upload and store metadata
-        const fileDoc = db.collection('files').doc()
-        const uploadTask = storageRef.child(`files/${fileDoc.id}`).put(blobFile)
-
-        uploadTask.on('state_changed', function (snapshot) {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          console.log('Upload is ' + progress + '% done')
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused')
-              break
-            case 'running':
-              console.log('Upload is running')
-              break
-          }
-        }, function (error) {
-          console.error(error)
-        }, function () {
-          // Handle successful uploads on complete
-          uploadTask.snapshot.ref.getMetadata().then(function (snapshot) {
-            fileDoc.set({
-              name: file.name,
-              type: snapshot.contentType,
-              downloadUrl: snapshot.downloadURLs[0],
-              size: snapshot.size,
-              postedIn: snapshot.timeCreated
-            })
-          })
-        })
-      }
+      url: '/'
     }
   }),
   computed: mapState({
@@ -193,6 +158,9 @@ export default {
     },
     signout () {
       this.$store.dispatch(SIGNOUT)
+    },
+    addedFile (file) {
+      this.$store.dispatch(UPLOAD_FILE, file._file)
     }
   }
 }
