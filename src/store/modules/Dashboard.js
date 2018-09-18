@@ -51,8 +51,11 @@ export default {
             postedIn: snapshot.timeCreated
           })
             .then(function () {
-              fileDoc.collection('followers').doc(state.authUserId)
-                .set({ permissionLevel: 'owner' })
+              db.collection('fileFollowers').doc(state.authUserId)
+                .set({
+                  fileid: fileDoc.id,
+                  permissionLevel: 'owner'
+                })
             })
         })
       })
