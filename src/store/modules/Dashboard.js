@@ -51,40 +51,43 @@ export default {
             postedIn: snapshot.timeCreated
           })
             .then(function () {
-              db.collection('fileFollowers').doc(state.authUserId)
-                .set({
-                  fileid: fileDoc.id,
-                  permissionLevel: 'owner'
+              const payload = { [fileDoc.id]: 'owner' }
+              const fileFollowerRef = db.collection('fileFollowers').doc(state.authUserId)
+
+              db.runTransaction(function (transaction) {
+                return transaction.get(fileFollowerRef).then(function (docSnap) {
+                  if (!docSnap.exists) {
+                    transaction.set(fileFollowerRef, payload)
+                  } else {
+                    transaction.update(fileFollowerRef, payload)
+                  }
                 })
+              })
             })
         })
       })
     },
     [ON_CHECKING_FILES] ({ state }) {
-      state.userFiles = []
       state.loadingFiles = true
 
-      db.collection('files')
+      db.collection('fileFollowers').doc(state.authUserId)
         .onSnapshot(function (docs) {
-          docs.docChanges.forEach(function (change) {
-            const { doc, type } = change
+          state.loadingFiles = true
+          state.userFiles = []
 
-            switch (type) {
-              case 'added':
-                if (doc.data().name) {
-                  state.userFiles.push({ id: doc.id, ...doc.data() })
+          const files = docs.data()
+          const fileIds = Object.keys(files)
+
+          fileIds.forEach(function (fileId, key) {
+            db.collection('files').doc(fileId).get()
+              .then(function (fileSnap) {
+                state.userFiles.push({ id: fileId, ...fileSnap.data() })
+
+                if (key + 1 === fileIds.length) {
+                  state.loadingFiles = false
                 }
-                break
-              case 'removed':
-                const fileIndex = state.userFiles.findIndex((file) => file.id === doc.id)
-                if (fileIndex > -1) {
-                  state.userFiles.splice(fileIndex, 1)
-                }
-                break
-            }
+              })
           })
-
-          state.loadingFiles = false
         })
     },
     [DELETE_FILE] ({ state }, fileId) {
