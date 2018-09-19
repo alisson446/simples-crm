@@ -100,7 +100,7 @@
                 <md-tooltip md-direction="top">Baixar</md-tooltip>
               </md-button>
 
-              <md-button class="md-icon-button" @click="showShareDialog = true">
+              <md-button class="md-icon-button" @click="openShareDialog(userFile.id)">
                 <md-icon>share</md-icon>
                 <md-tooltip md-direction="top">Compartilhar</md-tooltip>
               </md-button>
@@ -140,7 +140,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" @click="closeShareDialog">Cancelar</md-button>
-        <md-button class="md-primary" @click="closeShareDialog">Compartilhar</md-button>
+        <md-button class="md-primary" @click="shareFile(file.toShare, file.emailToShare)">Compartilhar</md-button>
       </md-dialog-actions>
     </md-dialog>
     <!-- end Sharing with users dialog -->
@@ -163,6 +163,7 @@ import { mapState } from 'vuex'
 import {
   UPLOAD_FILE,
   ON_CHECKING_FILES,
+  SHARE_FILE,
   DELETE_FILE,
   SIGNOUT
 } from '@/store/constants'
@@ -177,6 +178,7 @@ export default {
     showShareDialog: false,
     showDeleteDialog: false,
     file: {
+      toShare: null,
       emailToShare: null,
       toDelete: null
     },
@@ -193,17 +195,27 @@ export default {
     this.$store.dispatch(ON_CHECKING_FILES)
   },
   methods: {
+    addedFile (file) {
+      this.$store.dispatch(UPLOAD_FILE, file._file)
+    },
+    shareFile (fileId, email) {
+      this.showShareDialog = false
+      this.file.toShare = null
+      this.file.emailToShare = null
+
+      if (email) {
+        this.$store.dispatch(SHARE_FILE, { fileId, email })
+      }
+    },
     deleteFile (fileId) {
       this.showDeleteDialog = false
       this.file.toDelete = null
 
       this.$store.dispatch(DELETE_FILE, fileId)
     },
-    signout () {
-      this.$store.dispatch(SIGNOUT)
-    },
-    addedFile (file) {
-      this.$store.dispatch(UPLOAD_FILE, file._file)
+    openShareDialog (fileId) {
+      this.showShareDialog = true
+      this.file.toShare = fileId
     },
     closeShareDialog () {
       this.showShareDialog = false
@@ -212,6 +224,9 @@ export default {
     openDeleteDialog (fileId) {
       this.showDeleteDialog = true
       this.file.toDelete = fileId
+    },
+    signout () {
+      this.$store.dispatch(SIGNOUT)
     }
   }
 }

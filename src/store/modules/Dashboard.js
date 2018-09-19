@@ -2,6 +2,7 @@ import { auth, db, storageRef } from '../../../api/firebase'
 import {
   UPLOAD_FILE,
   ON_CHECKING_FILES,
+  SHARE_FILE,
   DELETE_FILE,
   SIGNOUT
 } from '../constants'
@@ -84,6 +85,21 @@ export default {
                 break
             }
           })
+        })
+    },
+    [SHARE_FILE] ({ state }, payload) {
+      const { fileId, email } = payload
+
+      db.collection('users').where('email', '==', email).get()
+        .then(function (docsSnap) {
+          const { docs } = docsSnap
+
+          if (docs.length) {
+            const receiverId = docs[0].id
+
+            db.collection('users').doc(receiverId).collection('files').doc(fileId)
+              .set({ permissionLevel: 'writer' })
+          }
         })
     },
     [DELETE_FILE] ({ state }, fileId) {
