@@ -58,10 +58,14 @@ export default {
       })
     },
     [ON_CHECKING_FILES] ({ state }) {
+      state.userFiles = []
       state.loadingFiles = true
 
       db.collection('users').doc(state.authUserId).collection('files')
         .onSnapshot(function (docs) {
+          console.log()
+          if (docs.docChanges.length === 0) state.loadingFiles = false
+
           docs.docChanges.forEach(function (change) {
             const { doc, type } = change
 
@@ -81,8 +85,6 @@ export default {
                 break
             }
           })
-
-          state.loadingFiles = false
         })
     },
     [DELETE_FILE] ({ state }, fileId) {
