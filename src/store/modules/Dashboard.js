@@ -63,7 +63,6 @@ export default {
 
       db.collection('users').doc(state.authUserId).collection('files')
         .onSnapshot(function (docs) {
-          console.log()
           if (docs.docChanges.length === 0) state.loadingFiles = false
 
           docs.docChanges.forEach(function (change) {

@@ -85,7 +85,7 @@
       <md-card class="card-file" v-for="userFile in userFiles" :key="userFile.id">
         <md-card-media-cover md-solid>
           <md-card-media md-ratio="1:1">
-            <img :src="userFile.downloadUrl">
+            <img :src="userFile.downloadUrl"/>
           </md-card-media>
 
           <md-card-area>
@@ -99,6 +99,12 @@
                 <md-icon>cloud_download</md-icon>
                 <md-tooltip md-direction="top">Baixar</md-tooltip>
               </md-button>
+
+              <md-button class="md-icon-button" @click="showShareDialog = true">
+                <md-icon>share</md-icon>
+                <md-tooltip md-direction="top">Compartilhar</md-tooltip>
+              </md-button>
+
               <md-button class="md-icon-button" @click="deleteFile(userFile.id)">
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction="top">Remover</md-tooltip>
@@ -121,6 +127,23 @@
     </md-empty-state>
     <!-- end Files Content -->
 
+    <!-- start Invite to files -->
+    <md-dialog :md-active.sync="showShareDialog" class="md-layout-item md-size-30">
+      <md-dialog-title>Compartilhar com...</md-dialog-title>
+
+      <md-dialog-content>
+        <md-field md-inline class="md-layout-item">
+          <label>Email</label>
+          <md-input v-model="userEmailShared"></md-input>
+        </md-field>
+      </md-dialog-content>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="closeShareDialog">Cancelar</md-button>
+        <md-button class="md-primary" @click="closeShareDialog">Compartilhar</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+    <!-- end Invite to files -->
   </div>
 </template>
 
@@ -140,6 +163,8 @@ export default {
     date: null,
     menu: false,
     clickUserOptions: false,
+    showShareDialog: false,
+    userEmailShared: null,
     options: {
       url: '/'
     }
@@ -161,6 +186,10 @@ export default {
     },
     addedFile (file) {
       this.$store.dispatch(UPLOAD_FILE, file._file)
+    },
+    closeShareDialog () {
+      this.showShareDialog = false
+      this.userEmailShared = null
     }
   }
 }
