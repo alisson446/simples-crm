@@ -105,7 +105,7 @@
                 <md-tooltip md-direction="top">Compartilhar</md-tooltip>
               </md-button>
 
-              <md-button class="md-icon-button" @click="deleteFile(userFile.id)">
+              <md-button class="md-icon-button" @click="openDeleteDialog(userFile.id)">
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction="top">Remover</md-tooltip>
               </md-button>
@@ -127,14 +127,14 @@
     </md-empty-state>
     <!-- end Files Content -->
 
-    <!-- start Invite to files -->
+    <!-- start Sharing with users dialog -->
     <md-dialog :md-active.sync="showShareDialog" class="md-layout-item md-size-30">
       <md-dialog-title>Compartilhar com...</md-dialog-title>
 
       <md-dialog-content>
         <md-field md-inline class="md-layout-item">
           <label>Email</label>
-          <md-input v-model="userEmailShared"></md-input>
+          <md-input v-model="file.emailToShare"></md-input>
         </md-field>
       </md-dialog-content>
 
@@ -143,7 +143,18 @@
         <md-button class="md-primary" @click="closeShareDialog">Compartilhar</md-button>
       </md-dialog-actions>
     </md-dialog>
-    <!-- end Invite to files -->
+    <!-- end Sharing with users dialog -->
+
+    <!-- start Deleting file dialog -->
+    <md-dialog :md-active.sync="showDeleteDialog" class="md-layout-item md-size-20">
+      <md-dialog-title>Tem certeza?</md-dialog-title>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="showDeleteDialog = false">Cancelar</md-button>
+        <md-button class="md-primary" @click="deleteFile(file.toDelete)">Deletar</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+    <!-- end Deleting file dialog -->
   </div>
 </template>
 
@@ -164,7 +175,11 @@ export default {
     menu: false,
     clickUserOptions: false,
     showShareDialog: false,
-    userEmailShared: null,
+    showDeleteDialog: false,
+    file: {
+      emailToShare: null,
+      toDelete: null
+    },
     options: {
       url: '/'
     }
@@ -179,6 +194,9 @@ export default {
   },
   methods: {
     deleteFile (fileId) {
+      this.showDeleteDialog = false
+      this.file.toDelete = null
+
       this.$store.dispatch(DELETE_FILE, fileId)
     },
     signout () {
@@ -189,7 +207,11 @@ export default {
     },
     closeShareDialog () {
       this.showShareDialog = false
-      this.userEmailShared = null
+      this.file.emailToShare = null
+    },
+    openDeleteDialog (fileId) {
+      this.showDeleteDialog = true
+      this.file.toDelete = fileId
     }
   }
 }
