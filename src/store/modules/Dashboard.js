@@ -51,18 +51,8 @@ export default {
             postedIn: snapshot.timeCreated
           })
             .then(function () {
-              const payload = { [fileDoc.id]: 'owner' }
-              const fileFollowerRef = db.collection('fileFollowers').doc(state.authUserId)
-
-              db.runTransaction(function (transaction) {
-                return transaction.get(fileFollowerRef).then(function (docSnap) {
-                  if (!docSnap.exists) {
-                    transaction.set(fileFollowerRef, payload)
-                  } else {
-                    transaction.update(fileFollowerRef, payload)
-                  }
-                })
-              })
+              db.collection('users').doc(state.authUserId).collection('files').doc(fileDoc.id)
+                .set({ permissionlevel: 'owner' })
             })
         })
       })
@@ -70,30 +60,39 @@ export default {
     [ON_CHECKING_FILES] ({ state }) {
       state.loadingFiles = true
 
-      db.collection('fileFollowers').doc(state.authUserId)
+      db.collection('users').doc(state.authUserId).collection('files')
         .onSnapshot(function (docs) {
-          state.loadingFiles = true
-          state.userFiles = []
+          docs.docChanges.forEach(function (change) {
+            const { doc, type } = change
 
-          const files = docs.data()
-          const fileIds = Object.keys(files)
-
-          fileIds.forEach(function (fileId, key) {
-            db.collection('files').doc(fileId).get()
-              .then(function (fileSnap) {
-                state.userFiles.push({ id: fileId, ...fileSnap.data() })
-
-                if (key + 1 === fileIds.length) {
-                  state.loadingFiles = false
+            switch (type) {
+              case 'added':
+                db.collection('files').doc(doc.id).get()
+                  .then(function (fileSnap) {
+                    state.userFiles.push({ id: doc.id, ...fileSnap.data() })
+                    state.loadingFiles = false
+                  })
+                break
+              case 'removed':
+                const fileIndex = state.userFiles.findIndex((file) => file.id === doc.id)
+                if (fileIndex > -1) {
+                  state.userFiles.splice(fileIndex, 1)
                 }
-              })
+                break
+            }
           })
+
+          state.loadingFiles = false
         })
     },
     [DELETE_FILE] ({ state }, fileId) {
       storageRef.child(`files/${fileId}`).delete()
         .then(function () {
           db.collection('files').doc(fileId).delete()
+            .then(function () {
+              db.collection('users').doc(state.authUserId).collection('files').doc(fileId).delete()
+                .catch(console.error)
+            })
             .catch(console.error)
         })
         .catch(console.error)
