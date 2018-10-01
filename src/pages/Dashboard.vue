@@ -27,7 +27,7 @@
           <div class="md-layout-item md-size-70 md-small-size-100">
             <md-field md-inline class="md-layout-item">
               <label>Pesquise...</label>
-              <md-input v-model="search"></md-input>
+              <md-input v-model="searchName"></md-input>
             </md-field>
           </div>
 
@@ -160,6 +160,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import algoliasearch from 'algoliasearch/lite'
 import {
   UPLOAD_FILE,
   ON_CHECKING_FILES,
@@ -168,10 +169,13 @@ import {
   SIGNOUT
 } from '@/store/constants'
 
+var client = algoliasearch('T7M7VAPP9Y', 'c3eee617de443076e1e036a0902225cd')
+var index = client.initIndex('files')
+
 export default {
   name: 'Dashboard',
   data: () => ({
-    search: null,
+    searchName: null,
     date: null,
     menu: false,
     clickUserOptions: false,
@@ -186,6 +190,15 @@ export default {
       url: '/'
     }
   }),
+  watch: {
+    searchName: function (newValue, oldValue) {
+      index.search(newValue, function (err, content) {
+        if (err) console.error(err)
+
+        console.log(content.hits)
+      })
+    }
+  },
   computed: mapState({
     userFiles: state => state.Dashboard.userFiles,
     hasFiles: state => state.Dashboard.userFiles.length !== 0,
