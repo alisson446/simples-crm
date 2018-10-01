@@ -60,7 +60,6 @@
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 import { validationMixin } from 'vuelidate'
 import {

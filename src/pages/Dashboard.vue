@@ -160,7 +160,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import algoliasearch from 'algoliasearch/lite'
+import algoliasearch from 'algoliasearch'
 import {
   UPLOAD_FILE,
   ON_CHECKING_FILES,
