@@ -160,17 +160,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import algoliasearch from 'algoliasearch'
 import {
   UPLOAD_FILE,
   ON_CHECKING_FILES,
+  FILTER_FILES,
   SHARE_FILE,
   DELETE_FILE,
   SIGNOUT
 } from '@/store/constants'
-
-var client = algoliasearch('T7M7VAPP9Y', 'c3eee617de443076e1e036a0902225cd')
-var index = client.initIndex('files')
 
 export default {
   name: 'Dashboard',
@@ -192,11 +189,10 @@ export default {
   }),
   watch: {
     searchName: function (newValue, oldValue) {
-      index.search(newValue, function (err, content) {
-        if (err) console.error(err)
-
-        console.log(content.hits)
-      })
+      this.filterFiles()
+    },
+    date: function (newValue, oldValue) {
+      this.filterFiles()
     }
   },
   computed: mapState({
@@ -210,6 +206,13 @@ export default {
   methods: {
     addedFile (file) {
       this.$store.dispatch(UPLOAD_FILE, file._file)
+    },
+    filterFiles () {
+      const name = this.searchName ? this.searchName : ''
+      const date = this.date ? this.date : ''
+      const query = `${name} ${date}`
+
+      this.$store.dispatch(FILTER_FILES, query)
     },
     shareFile (fileId, email) {
       this.showShareDialog = false

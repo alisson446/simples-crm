@@ -1,12 +1,21 @@
 import { auth, db, storageRef } from '../../../api/firebase'
+import algoliaClient from '../../../api/algolia'
 import {
   UPLOAD_FILE,
   ON_CHECKING_FILES,
+  FILTER_FILES,
   SHARE_FILE,
   DELETE_FILE,
   SIGNOUT
 } from '../constants'
 import router from '@/router'
+
+const index = algoliaClient.initIndex('files')
+
+index.setSettings({
+  queryType: 'prefixAll',
+  searchableAttributes: ['name', 'postedIn']
+})
 
 export default {
   state: {
@@ -85,6 +94,26 @@ export default {
                 break
             }
           })
+        })
+    },
+    [FILTER_FILES] ({ state }, payload) {
+      state.userFiles = []
+      state.loadingFiles = true
+
+      index.search(payload)
+        .then(function (content) {
+          const files = content.hits
+          if (files.length === 0) state.loadingFiles = false
+
+          files.forEach(function (file) {
+            state.userFiles.push({ id: file.objectID, ...file })
+          })
+
+          state.loadingFiles = false
+        })
+        .catch((error) => {
+          state.loadingFiles = false
+          console.error(error)
         })
     },
     [SHARE_FILE] ({ state }, payload) {
