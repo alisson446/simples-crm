@@ -10,13 +10,6 @@ import {
 } from '../constants'
 import router from '@/router'
 
-const index = algoliaClient.initIndex('files')
-
-index.setSettings({
-  queryType: 'prefixAll',
-  searchableAttributes: ['name', 'postedIn']
-})
-
 export default {
   state: {
     userFiles: [],
@@ -99,6 +92,13 @@ export default {
     [FILTER_FILES] ({ state }, payload) {
       state.userFiles = []
       state.loadingFiles = true
+
+      const index = algoliaClient.initIndex(`files_#${state.authUserId}`)
+
+      index.setSettings({
+        queryType: 'prefixAll',
+        searchableAttributes: ['name', 'postedIn']
+      })
 
       index.search(payload)
         .then(function (content) {
