@@ -24,9 +24,6 @@
         <md-progress-bar md-mode="indeterminate" v-if="checking" />
 
         <md-card-actions>
-          <div id="signup-label">Não possui uma conta?
-            <router-link to="/signup">Cadastre-se</router-link>
-          </div>
           <md-button type="submit" id="send-button" class="md-raised" :disabled="checking">Entrar</md-button>
         </md-card-actions>
       </md-card>
@@ -116,10 +113,6 @@ export default {
   #send-button {
     background-color: #237b90;
     color: white
-  }
-
-  #signup-label {
-    margin-right: 115px;
   }
 
   #loginError {

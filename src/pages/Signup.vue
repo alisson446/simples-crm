@@ -46,9 +46,6 @@
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <div id="signin-label">Já possui uma conta?
-            <router-link to="/signin">Logue-se</router-link>
-          </div>
           <md-button type="submit" id="send-button" class="md-raised" :disabled="sending || checkingField">Cadastrar</md-button>
         </md-card-actions>
       </md-card>
@@ -202,10 +199,6 @@ export default {
   #send-button {
     background-color: #237b90;
     color: white
-  }
-
-  #signin-label {
-    margin-right: 130px;
   }
 
 </style>

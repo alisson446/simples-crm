@@ -44,15 +44,15 @@ const router = new VueRouter({
 
 // Check if user is authenticated in each route
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/signin' && to.path !== '/signup') {
+  if (to.path !== '/signin') {
     auth.onAuthStateChanged(function (user) {
       if (!user) {
         // User is signed out.
         router.push('/signin')
+      } else {
+        store.state.Dashboard.authUserId = user.uid
+        next()
       }
-
-      store.state.Dashboard.authUserId = user.uid
-      next()
     })
   } else {
     next()

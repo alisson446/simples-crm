@@ -14,7 +14,8 @@ export default {
   state: {
     userFiles: [],
     loadingFiles: false,
-    authUserId: null
+    authUserId: null,
+    userType: 'administrator'
   },
   mutations: {},
   actions: {
@@ -54,9 +55,14 @@ export default {
             postedIn: snapshot.timeCreated
           })
             .then(function () {
-              db.collection('users').doc(state.authUserId).collection('files').doc(fileDoc.id)
+              return db.collection('users').doc(state.authUserId).collection('files').doc(fileDoc.id)
                 .set({ permissionlevel: 'owner' })
             })
+            .then(function () {
+              return db.collection('files').doc(fileDoc.id).collection('followers').doc(state.authUserId)
+                .set({ permissionlevel: 'owner' })
+            })
+            .catch((error) => console.error(error))
         })
       })
     },
@@ -128,17 +134,32 @@ export default {
 
             db.collection('users').doc(receiverId).collection('files').doc(fileId)
               .set({ permissionLevel: 'writer' })
+
+              .then(function () {
+                db.collection('files').doc(fileId).collection('followers').doc(receiverId)
+                  .set({ permissionlevel: 'owner' })
+              })
           }
         })
     },
     [DELETE_FILE] ({ state }, fileId) {
       storageRef.child(`files/${fileId}`).delete()
         .then(function () {
-          db.collection('files').doc(fileId).delete()
-            .then(function () {
-              db.collection('users').doc(state.authUserId).collection('files').doc(fileId).delete()
-                .catch(console.error)
+          db.collection('files').doc(fileId).collection('followers').get()
+            .then(function (docsSnap) {
+              const followers = docsSnap.docs
+
+              if (followers.length) {
+                followers.forEach(function (follower) {
+                  db.collection('users').doc(follower.id).collection('files').doc(fileId).delete()
+                    .then(() => {
+                      db.collection('files').doc(fileId).collection('followers').doc(follower.id).delete()
+                    })
+                    .catch(console.error)
+                })
+              }
             })
+            .then(() => db.collection('files').doc(fileId).delete())
             .catch(console.error)
         })
         .catch(console.error)

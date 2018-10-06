@@ -12,6 +12,12 @@
           <button class="user-options-item">Configurações</button>
         </md-menu-item>
 
+        <md-menu-item v-if="isAdministrator">
+          <router-link to="/signup" class="user-options-item">
+            <button>Novo Usuário</button>
+          </router-link>
+        </md-menu-item>
+
         <md-menu-item>
           <button class="user-options-item" @click="signout">Sair</button>
         </md-menu-item>
@@ -105,7 +111,7 @@
                 <md-tooltip md-direction="top">Compartilhar</md-tooltip>
               </md-button>
 
-              <md-button class="md-icon-button" @click="openDeleteDialog(userFile.id)">
+              <md-button class="md-icon-button" @click="openDeleteDialog(userFile.id)" v-if="isAdministrator">
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction="top">Remover</md-tooltip>
               </md-button>
@@ -198,7 +204,8 @@ export default {
   computed: mapState({
     userFiles: state => state.Dashboard.userFiles,
     hasFiles: state => state.Dashboard.userFiles.length !== 0,
-    loadingFiles: state => state.Dashboard.loadingFiles
+    loadingFiles: state => state.Dashboard.loadingFiles,
+    isAdministrator: state => state.Dashboard.userType === 'administrator'
   }),
   created () {
     this.$store.dispatch(ON_CHECKING_FILES)
