@@ -13,6 +13,7 @@ export default {
     userName: null,
     userEmail: null,
     userAccountExists: false,
+    userAccountInvalided: false,
     emailExists: false,
     userSaved: false,
     sending: false
@@ -32,8 +33,15 @@ export default {
   actions: {
     [CHECK_FIELD_VALUE_EXISTS]: function ({ state }, payload) {
       const { field, value } = payload
+      state.userAccountInvalided = false
 
       return new Promise((resolve, reject) => {
+        // Check if userAccount value contains invalid characters
+        if (field === 'userAccount' && value.includes('@')) {
+          state.userAccountInvalided = true
+          resolve()
+        }
+
         // Check if field value exists in users collection
         db.collection('users').where(field, '==', value).get()
           .then(function (docs) {

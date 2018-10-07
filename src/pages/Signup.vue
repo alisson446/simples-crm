@@ -15,6 +15,7 @@
                 <md-input :onkeypress="checkFieldValueExists('userAccount')" name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
                 <span class="md-error" v-if="!$v.form.userAccount.required">O nome de usuário é obrigatório</span>
                 <span class="md-error" v-else-if="userAccountExists">Nome de usuário já existente</span>
+                <span class="md-error" v-else-if="userAccountInvalided">Não pode conter caracteres inválidos</span>
               </md-field>
             </div>
 
@@ -46,6 +47,13 @@
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
+          <router-link to="/" id="backward-button">
+            <md-button class="md-icon-button">
+              <md-icon>keyboard_backspace</md-icon>
+              <md-tooltip md-direction="top">Voltar</md-tooltip>
+            </md-button>
+          </router-link>
+
           <md-button type="submit" id="send-button" class="md-raised" :disabled="sending || checkingField">Cadastrar</md-button>
         </md-card-actions>
       </md-card>
@@ -88,6 +96,7 @@ export default {
   }),
   computed: mapState({
     userAccountExists: state => state.Signup.userAccountExists,
+    userAccountInvalided: state => state.Signup.userAccountInvalided,
     emailExists: state => state.Signup.emailExists,
     userAccount: state => state.Signup.userAccount,
     userSaved: state => state.Signup.userSaved,
@@ -142,7 +151,9 @@ export default {
 
             // Set property class like valid or not
             this[`${fieldName}Class`] = {
-              'md-invalid': this.isInvalid(fieldName) || this[`${fieldName}Exists`]
+              'md-invalid': (
+                this.isInvalid(fieldName) || this[`${fieldName}Exists`] || this[`${fieldName}Invalided`]
+              )
             }
           })
       }
@@ -198,7 +209,11 @@ export default {
 
   #send-button {
     background-color: #237b90;
-    color: white
+    color: white;
+  }
+
+  #backward-button {
+    margin-right: 290px;
   }
 
 </style>

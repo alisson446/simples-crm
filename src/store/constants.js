@@ -3,6 +3,7 @@ export const SUM = 'SUM'
 /**
  * Authentication
  */
+export const FB_SIGNIN = 'FB_SIGNIN'
 export const SIGNUP = 'SIGNUP'
 export const SIGNIN = 'SIGNIN'
 export const USER_CREATED = 'CREATE_USER'
