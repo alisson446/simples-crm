@@ -8,6 +8,7 @@ export const SIGNUP = 'SIGNUP'
 export const SIGNIN = 'SIGNIN'
 export const USER_CREATED = 'CREATE_USER'
 export const USER_LOGGED = 'USER_LOGGED'
+export const GET_AUTH_USER = 'GET_AUTH_USER'
 export const SIGNOUT = 'SIGNOUT'
 
 /**

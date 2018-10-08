@@ -41,7 +41,7 @@ export default {
       state.loginError = false
 
       if (!userOrEmail.includes('@')) {
-        db.collection('users').where('name', '==', userOrEmail).get()
+        db.collection('users').where('userAccount', '==', userOrEmail).get()
           .then(function (docs) {
             const users = docs.docs
 

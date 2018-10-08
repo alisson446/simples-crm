@@ -3,6 +3,7 @@ import { auth, db, storageRef } from '../../../api/firebase'
 import algoliaClient from '../../../api/algolia'
 import {
   UPLOAD_FILE,
+  GET_AUTH_USER,
   ON_CHECKING_FILES,
   FILTER_FILES,
   SHARE_FILE,
@@ -16,14 +17,16 @@ export default {
     userFiles: [],
     loadingFiles: false,
     authUserId: null,
-    userType: null
+    authUser: {
+      type: null
+    }
   },
   mutations: {},
   actions: {
-    GET_USER_TYPE ({ state }) {
+    [GET_AUTH_USER] ({ state }) {
       db.collection('users').doc(state.authUserId).get()
         .then(function (snap) {
-          state.userType = snap.data().type
+          state.authUser = snap.data()
         })
     },
     [UPLOAD_FILE] ({ state }, file) {
@@ -56,6 +59,7 @@ export default {
         uploadTask.snapshot.ref.getMetadata().then(function (snapshot) {
           fileDoc.set({
             name: file.name,
+            company: state.authUser.company,
             type: snapshot.contentType,
             downloadUrl: snapshot.downloadURLs[0],
             size: snapshot.size,
@@ -110,7 +114,7 @@ export default {
 
       index.setSettings({
         queryType: 'prefixAll',
-        searchableAttributes: ['name', 'postedIn']
+        searchableAttributes: ['name', 'company', 'postedIn']
       })
 
       index.search(payload)

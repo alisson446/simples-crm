@@ -30,10 +30,17 @@
       <md-content id="search-content" class="md-layout-item md-size-80 md-small-size-100 md-accent">
 
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-70 md-small-size-100">
+          <div class="md-layout-item md-size-40 md-small-size-100">
             <md-field md-inline class="md-layout-item">
-              <label>Pesquise...</label>
+              <label>Nome do Arquivo</label>
               <md-input v-model="searchName"></md-input>
+            </md-field>
+          </div>
+
+          <div class="md-layout-item md-size-30 md-small-size-100">
+            <md-field md-inline class="md-layout-item">
+              <label>Empresa</label>
+              <md-input v-model="searchCompany"></md-input>
             </md-field>
           </div>
 
@@ -170,6 +177,7 @@
 import { mapState } from 'vuex'
 import {
   UPLOAD_FILE,
+  GET_AUTH_USER,
   ON_CHECKING_FILES,
   FILTER_FILES,
   SHARE_FILE,
@@ -181,6 +189,7 @@ export default {
   name: 'Dashboard',
   data: () => ({
     searchName: null,
+    searchCompany: null,
     date: null,
     dateFormatted: null,
     menu: false,
@@ -200,6 +209,9 @@ export default {
     searchName: function (newValue, oldValue) {
       this.filterFiles()
     },
+    searchCompany: function (newValue, oldValue) {
+      this.filterFiles()
+    },
     date: function (newValue, oldValue) {
       this.filterFiles()
       this.dateFormatted = this.formatDate(this.date)
@@ -209,13 +221,13 @@ export default {
     userFiles: state => state.Dashboard.userFiles,
     hasFiles: state => state.Dashboard.userFiles.length !== 0,
     loadingFiles: state => state.Dashboard.loadingFiles,
-    isAdministrator: state => state.Dashboard.userType === 'administrator',
+    isAdministrator: state => state.Dashboard.authUser.type === 'administrator',
     computedDateFormatted () {
       return this.formatDate(this.date)
     }
   }),
   created () {
-    this.$store.dispatch('GET_USER_TYPE')
+    this.$store.dispatch(GET_AUTH_USER)
     this.$store.dispatch(ON_CHECKING_FILES)
   },
   methods: {
@@ -224,8 +236,9 @@ export default {
     },
     filterFiles () {
       const name = this.searchName ? this.searchName : ''
+      const company = this.searchCompany ? this.searchCompany : ''
       const date = this.date ? this.date : ''
-      const query = `${name} ${date}`
+      const query = `${name} ${company} ${date}`
 
       this.$store.dispatch(FILTER_FILES, query)
     },
