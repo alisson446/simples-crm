@@ -14,8 +14,8 @@
                 <label for="userAccount">Usuário</label>
                 <md-input :onkeypress="checkFieldValueExists('userAccount')" name="userAccount" id="userAccount" autocomplete="given-name" v-model="form.userAccount" :disabled="sending" />
                 <span class="md-error" v-if="!$v.form.userAccount.required">O nome de usuário é obrigatório</span>
-                <span class="md-error" v-else-if="userAccountExists">Nome de usuário já existente</span>
                 <span class="md-error" v-else-if="userAccountInvalided">Não pode conter caracteres inválidos</span>
+                <span class="md-error" v-else-if="userAccountExists">Nome de usuário já existente</span>
               </md-field>
             </div>
 
@@ -29,10 +29,17 @@
             </div>
           </div>
 
+          <md-field :class="getValidationClass('company')">
+            <label for="company">Empresa</label>
+            <md-input type="company" name="company" id="company" autocomplete="company" v-model="form.company" :disabled="sending" />
+            <span class="md-error" v-if="!$v.form.company.required">O nome da empresa é obrigatório</span>
+          </md-field>
+
           <md-field :class="$v.form.email.required ? emailClass : getValidationClass('email')">
             <label for="email">Email</label>
             <md-input type="email" :onkeypress="checkFieldValueExists('email')" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
             <span class="md-error" v-if="!$v.form.email.required">O email é obrigatório</span>
+            <span class="md-error" v-else-if="!$v.form.email.email">Formato de email inválido</span>
             <span class="md-error" v-else-if="emailExists">Email já existente</span>
           </md-field>
 
@@ -85,6 +92,7 @@ export default {
     form: {
       userAccount: null,
       name: null,
+      company: null,
       email: null,
       password: null
     },
@@ -110,6 +118,9 @@ export default {
       name: {
         required,
         minLength: minLength(3)
+      },
+      company: {
+        required
       },
       email: {
         required,
@@ -169,6 +180,7 @@ export default {
       this.$store.dispatch(SIGNUP, {
         userAccount: `${this.form.userAccount}`,
         name: `${this.form.name}`,
+        company: `${this.form.company}`,
         email: this.form.email,
         password: this.form.password
       })
@@ -191,7 +203,7 @@ export default {
   @charset 'utf-8';
 
   .md-card {
-    margin: 100px auto;
+    margin: 85px auto;
     padding: 10px;
   }
 

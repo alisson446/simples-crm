@@ -4,7 +4,6 @@ import {
   USER_CREATED
 } from '../constants'
 import { auth, db } from '../../../api/firebase'
-import router from '@/router'
 
 export default {
   state: {
@@ -26,8 +25,6 @@ export default {
       state.userEmail = payload.userEmail
       state.userSaved = true
       state.sending = false
-
-      router.push('/signin')
     }
   },
   actions: {
@@ -61,7 +58,7 @@ export default {
       })
     },
     [SIGNUP] ({ commit, state }, payload) {
-      const { userAccount, name, email, password } = payload
+      const { userAccount, name, company, email, password } = payload
       state.sending = true
 
       return new Promise((resolve, reject) => {
@@ -75,6 +72,7 @@ export default {
             db.doc(`users/${authUserId}`).set({
               userAccount,
               name,
+              company,
               email,
               password
             })
