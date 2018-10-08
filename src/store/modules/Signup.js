@@ -3,7 +3,7 @@ import {
   CHECK_FIELD_VALUE_EXISTS,
   USER_CREATED
 } from '../constants'
-import { auth, db } from '../../../api/firebase'
+import { secondaryApp, db } from '../../../api/firebase'
 
 export default {
   state: {
@@ -63,9 +63,11 @@ export default {
 
       return new Promise((resolve, reject) => {
         // Creating authentication token
-        auth.createUserWithEmailAndPassword(email, password)
-          .then(function () {
-            const authUserId = auth.currentUser.uid
+        const secondaryAuth = secondaryApp.auth()
+
+        secondaryAuth.createUserWithEmailAndPassword(email, password)
+          .then(function (userCreated) {
+            const authUserId = userCreated.uid
             const fullPayload = { ...payload, authUserId }
 
             // Creating user in database
@@ -78,6 +80,7 @@ export default {
             })
               .then(function () {
                 commit(USER_CREATED, fullPayload)
+                secondaryAuth.signOut()
                 resolve()
               })
               .catch(function (error) {

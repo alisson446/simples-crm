@@ -173,6 +173,7 @@ export default {
       this.$v.$reset()
       this.form.userAccount = null
       this.form.name = null
+      this.form.company = null
       this.form.email = null
       this.form.password = null
     },
