@@ -8,9 +8,9 @@
       </md-button>
 
       <md-menu-content>
-        <md-menu-item>
+        <!-- <md-menu-item>
           <button class="user-options-item">Configurações</button>
-        </md-menu-item>
+        </md-menu-item> -->
 
         <md-menu-item v-if="isAdministrator">
           <router-link to="/signup" class="user-options-item">
@@ -53,16 +53,18 @@
             >
               <v-text-field
                 slot="activator"
-                v-model="date"
+                v-model="dateFormatted"
                 label="Por data"
                 prepend-icon="event"
-              ></v-text-field>
-              <v-date-picker locale="pt-br" header-color="grey darken-4" v-model="date" :landscape=true>
+                @blur="date = parseDate(dateFormatted)"
+              >
+              </v-text-field>
+
+              <v-date-picker locale="pt-br" header-color="grey darken-4" v-model="date" @input="!menu" :landscape=true>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="menu = false">Cancelar</v-btn>
                 <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
               </v-date-picker>
-
             </v-menu>
           </div>
 
@@ -180,6 +182,7 @@ export default {
   data: () => ({
     searchName: null,
     date: null,
+    dateFormatted: null,
     menu: false,
     clickUserOptions: false,
     showShareDialog: false,
@@ -199,15 +202,20 @@ export default {
     },
     date: function (newValue, oldValue) {
       this.filterFiles()
+      this.dateFormatted = this.formatDate(this.date)
     }
   },
   computed: mapState({
     userFiles: state => state.Dashboard.userFiles,
     hasFiles: state => state.Dashboard.userFiles.length !== 0,
     loadingFiles: state => state.Dashboard.loadingFiles,
-    isAdministrator: state => state.Dashboard.userType === 'administrator'
+    isAdministrator: state => state.Dashboard.userType === 'administrator',
+    computedDateFormatted () {
+      return this.formatDate(this.date)
+    }
   }),
   created () {
+    this.$store.dispatch('GET_USER_TYPE')
     this.$store.dispatch(ON_CHECKING_FILES)
   },
   methods: {
@@ -247,6 +255,18 @@ export default {
     openDeleteDialog (fileId) {
       this.showDeleteDialog = true
       this.file.toDelete = fileId
+    },
+    formatDate (date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+
+      const [month, day, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
     signout () {
       this.$store.dispatch(SIGNOUT)

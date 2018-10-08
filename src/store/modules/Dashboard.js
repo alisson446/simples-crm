@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { auth, db, storageRef } from '../../../api/firebase'
 import algoliaClient from '../../../api/algolia'
 import {
@@ -15,10 +16,16 @@ export default {
     userFiles: [],
     loadingFiles: false,
     authUserId: null,
-    userType: 'administrator'
+    userType: null
   },
   mutations: {},
   actions: {
+    GET_USER_TYPE ({ state }) {
+      db.collection('users').doc(state.authUserId).get()
+        .then(function (snap) {
+          state.userType = snap.data().type
+        })
+    },
     [UPLOAD_FILE] ({ state }, file) {
       const blobFile = new Blob(
         [file],
@@ -52,7 +59,7 @@ export default {
             type: snapshot.contentType,
             downloadUrl: snapshot.downloadURLs[0],
             size: snapshot.size,
-            postedIn: snapshot.timeCreated
+            postedIn: moment().format('YYYY-MM-DD')
           })
             .then(function () {
               return db.collection('users').doc(state.authUserId).collection('files').doc(fileDoc.id)
