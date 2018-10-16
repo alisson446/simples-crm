@@ -17,6 +17,7 @@ export default {
     userFiles: [],
     loadingFiles: false,
     authUserId: null,
+    sharedWithSuccess: false,
     authUser: {
       type: null
     }
@@ -135,6 +136,7 @@ export default {
     },
     [SHARE_FILE] ({ state }, payload) {
       const { fileId, email } = payload
+      state.sharedWithSuccess = false
 
       db.collection('users').where('email', '==', email).get()
         .then(function (docsSnap) {
@@ -147,8 +149,12 @@ export default {
               .set({ permissionLevel: 'writer' })
 
               .then(function () {
-                db.collection('files').doc(fileId).collection('followers').doc(receiverId)
+                return db.collection('files').doc(fileId).collection('followers').doc(receiverId)
                   .set({ permissionlevel: 'owner' })
+              })
+              .then(() => {
+                state.sharedWithSuccess = true
+                setTimeout(() => { state.sharedWithSuccess = false }, 4000)
               })
           }
         })

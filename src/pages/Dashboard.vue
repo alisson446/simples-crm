@@ -158,6 +158,8 @@
         <md-button class="md-primary" @click="shareFile(file.toShare, file.emailToShare)">Compartilhar</md-button>
       </md-dialog-actions>
     </md-dialog>
+
+    <md-snackbar :md-active.sync="sharedWithSuccess" :md-duration="100">Compartilhado com sucesso</md-snackbar>
     <!-- end Sharing with users dialog -->
 
     <!-- start Deleting file dialog -->
@@ -217,15 +219,21 @@ export default {
       this.dateFormatted = this.formatDate(this.date)
     }
   },
-  computed: mapState({
-    userFiles: state => state.Dashboard.userFiles,
-    hasFiles: state => state.Dashboard.userFiles.length !== 0,
-    loadingFiles: state => state.Dashboard.loadingFiles,
-    isAdministrator: state => state.Dashboard.authUser.type === 'administrator',
-    computedDateFormatted () {
-      return this.formatDate(this.date)
-    }
-  }),
+  computed: {
+    sharedWithSuccess: {
+      get: function () { return this.$store.state.Dashboard.sharedWithSuccess },
+      set: function (newValue) { return newValue }
+    },
+    ...mapState({
+      userFiles: state => state.Dashboard.userFiles,
+      hasFiles: state => state.Dashboard.userFiles.length !== 0,
+      loadingFiles: state => state.Dashboard.loadingFiles,
+      isAdministrator: state => state.Dashboard.authUser.type === 'administrator',
+      computedDateFormatted () {
+        return this.formatDate(this.date)
+      }
+    })
+  },
   created () {
     this.$store.dispatch(GET_AUTH_USER)
     this.$store.dispatch(ON_CHECKING_FILES)
