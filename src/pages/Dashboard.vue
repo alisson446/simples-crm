@@ -61,7 +61,7 @@
               <v-text-field
                 slot="activator"
                 v-model="dateFormatted"
-                label="Por data"
+                label="Data"
                 prepend-icon="event"
                 @blur="date = parseDate(dateFormatted)"
               >
@@ -171,6 +171,8 @@
         <md-button class="md-primary" @click="deleteFile(file.toDelete)">Deletar</md-button>
       </md-dialog-actions>
     </md-dialog>
+
+    <md-snackbar :md-active.sync="deletedWithSuccess" :md-duration="100">Deletado com sucesso</md-snackbar>
     <!-- end Deleting file dialog -->
   </div>
 </template>
@@ -222,6 +224,10 @@ export default {
   computed: {
     sharedWithSuccess: {
       get: function () { return this.$store.state.Dashboard.sharedWithSuccess },
+      set: function (newValue) { return newValue }
+    },
+    deletedWithSuccess: {
+      get: function () { return this.$store.state.Dashboard.deletedWithSuccess },
       set: function (newValue) { return newValue }
     },
     ...mapState({

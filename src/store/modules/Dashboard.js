@@ -18,6 +18,7 @@ export default {
     loadingFiles: false,
     authUserId: null,
     sharedWithSuccess: false,
+    deletedWithSuccess: false,
     authUser: {
       type: null
     }
@@ -177,6 +178,10 @@ export default {
               }
             })
             .then(() => db.collection('files').doc(fileId).delete())
+            .then(() => {
+              state.deletedWithSuccess = true
+              setTimeout(() => { state.deletedWithSuccess = false }, 4000)
+            })
             .catch(console.error)
         })
         .catch(console.error)
