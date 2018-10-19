@@ -80,11 +80,11 @@ export default {
       })
     },
     [ON_CHECKING_FILES] ({ state }) {
-      state.userFiles = []
       state.loadingFiles = true
 
       db.collection('users').doc(state.authUserId).collection('files')
         .onSnapshot(function (docs) {
+          state.userFiles = []
           if (docs.docChanges.length === 0) state.loadingFiles = false
 
           docs.docChanges.forEach(function (change) {
@@ -109,7 +109,6 @@ export default {
         })
     },
     [FILTER_FILES] ({ state }, payload) {
-      state.userFiles = []
       state.loadingFiles = true
 
       const index = algoliaClient.initIndex(`files_#${state.authUserId}`)
@@ -121,7 +120,9 @@ export default {
 
       index.search(payload)
         .then(function (content) {
+          state.userFiles = []
           const files = content.hits
+
           if (files.length === 0) state.loadingFiles = false
 
           files.forEach(function (file) {
