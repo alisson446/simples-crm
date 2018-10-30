@@ -3,8 +3,6 @@ import VueRouter from 'vue-router'
 import store from '@/store'
 import { auth } from '../../api/firebase'
 
-import HelloWorld from '@/pages/HelloWorld'
-import User from '@/pages/User'
 import Signup from '@/pages/Signup'
 import Signin from '@/pages/Signin'
 import Dashboard from '@/pages/Dashboard'
@@ -27,17 +25,6 @@ const router = new VueRouter({
       path: '/signin',
       name: 'Signin',
       component: Signin
-    },
-    {
-      path: '/HelloWorld',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      children: [
-        {
-          path: 'user/:name',
-          component: User
-        }
-      ]
     }
   ]
 })
