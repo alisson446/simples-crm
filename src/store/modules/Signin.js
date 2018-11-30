@@ -1,6 +1,8 @@
 import { FB_SIGNIN, SIGNIN, USER_LOGGED } from '../constants'
-import { auth, db } from '../../../api/firebase'
+import { db } from '../../../api/firebase'
 import router from '@/router'
+
+import signin from './_signin'
 
 export default {
   state: {
@@ -19,21 +21,8 @@ export default {
     }
   },
   actions: {
-    [FB_SIGNIN] ({ commit, state }, payload) {
-      const { email, password } = payload
-
-      // Checking authentication
-      auth.signInWithEmailAndPassword(email, password)
-        .then(function () {
-          commit(USER_LOGGED, payload)
-        })
-        .catch(function (error) {
-          // Handle Errors here.
-          console.error(error.code)
-          console.error(error.message)
-          state.checking = false
-          state.loginError = true
-        })
+    [FB_SIGNIN] (context, payload) {
+      signin(context, payload)
     },
     [SIGNIN] ({ dispatch, state }, payload) {
       const { userOrEmail, password } = payload

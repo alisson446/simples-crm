@@ -1,0 +1,27 @@
+@charset 'utf-8';
+
+.md-card {
+  margin: 130px auto;
+  padding: 10px;
+}
+
+.md-card-content {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.md-progress-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+#send-button {
+  background-color: #237b90;
+  color: white
+}
+
+#loginError {
+  background-color: #D32F2F;
+}

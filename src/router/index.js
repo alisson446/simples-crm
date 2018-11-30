@@ -3,9 +3,9 @@ import VueRouter from 'vue-router'
 import store from '@/store'
 import { auth } from '../../api/firebase'
 
-import Signup from '@/pages/Signup'
-import Signin from '@/pages/Signin'
-import Dashboard from '@/pages/Dashboard'
+import Signup from '@/pages/Signup/index'
+import Signin from '@/pages/Signin/index'
+import Dashboard from '@/pages/Dashboard/index'
 
 Vue.use(VueRouter)
 

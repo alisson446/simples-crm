@@ -1,0 +1,48 @@
+@charset 'utf-8';
+
+#form-search {
+  width: 100%;
+}
+
+#search-content {
+  margin: auto;
+  padding: 0px 20px 0px 20px;
+}
+
+#empty-state {
+  margin-top: 5%
+}
+
+#files-content {
+  width: 80%;
+  margin: 3% auto
+}
+
+#date-field {
+  margin-top: 4px;
+}
+
+#new-file {
+  margin-top: 18px;
+  background-color: #237b90;
+}
+
+#user-options-menu {
+  float: right;
+  margin-right: 1%;
+}
+
+.user-options-item {
+  margin: auto
+}
+
+.card-file {
+  width: 320px;
+  margin: 4px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.md-progress-spinner {
+  margin: 15%;
+}
