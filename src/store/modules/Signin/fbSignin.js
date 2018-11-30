@@ -1,7 +1,7 @@
-import { auth } from '../../../api/firebase'
-import { USER_LOGGED } from '../constants'
+import { auth } from '../../../../api/firebase'
+import { USER_LOGGED } from '../../constants'
 
-export default function signin ({ commit, state }, payload) {
+export default function fbSignin ({ commit, state }, payload) {
   const { email, password } = payload
 
   // Checking authentication

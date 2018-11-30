@@ -30,13 +30,13 @@ export default {
     }
   }),
   watch: {
-    searchName: function (newValue, oldValue) {
+    searchName: function () {
       this.filterFiles()
     },
-    searchCompany: function (newValue, oldValue) {
+    searchCompany: function () {
       this.filterFiles()
     },
-    date: function (newValue, oldValue) {
+    date: function () {
       this.filterFiles()
       this.dateFormatted = this.formatDate(this.date)
     }

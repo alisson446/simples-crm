@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import Signup from './modules/Signup'
-import Signin from './modules/Signin'
-import Dashboard from './modules/Dashboard'
+import Signup from './modules/Signup/index'
+import Signin from './modules/Signin/index'
+import Dashboard from './modules/Dashboard/index'
 
 Vue.use(Vuex)
 
