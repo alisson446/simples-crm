@@ -18,7 +18,6 @@ export default {
     form: {
       userAccount: null,
       name: null,
-      company: null,
       email: null,
       password: null
     },
@@ -44,9 +43,6 @@ export default {
       name: {
         required,
         minLength: minLength(3)
-      },
-      company: {
-        required
       },
       email: {
         required,
@@ -99,7 +95,6 @@ export default {
       this.$v.$reset()
       this.form.userAccount = null
       this.form.name = null
-      this.form.company = null
       this.form.email = null
       this.form.password = null
     },
@@ -107,7 +102,6 @@ export default {
       this.$store.dispatch(SIGNUP, {
         userAccount: `${this.form.userAccount}`,
         name: `${this.form.name}`,
-        company: `${this.form.company}`,
         email: this.form.email,
         password: this.form.password
       })

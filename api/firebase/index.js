@@ -3,16 +3,13 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
 
-const config = {
-  apiKey: 'AIzaSyDXHBqwZr84ldSrvo-9Nzn0cje4SfSk2uA',
-  authDomain: 'simples-crm.firebaseapp.com',
-  projectId: 'simples-crm',
-  storageBucket: 'simples-crm.appspot.com'
-}
+const firebaseApp = firebase.initializeApp({
+  apiKey: process.env.FIREBASE.API_KEY,
+  authDomain: process.env.FIREBASE.AUTH_DOMAIN,
+  projectId: process.env.FIREBASE.PROJECT_ID,
+  storageBucket: process.env.FIREBASE.STORAGE_BUCKET
+})
 
-const primaryApp = firebase.initializeApp(config)
-export const secondaryApp = firebase.initializeApp(config, 'Secondary')
-
-export const db = primaryApp.firestore()
-export const auth = primaryApp.auth()
-export const storageRef = primaryApp.storage().ref()
+export const db = firebaseApp.firestore()
+export const auth = firebaseApp.auth()
+export const storageRef = firebaseApp.storage().ref()

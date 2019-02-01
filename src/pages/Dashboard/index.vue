@@ -8,12 +8,6 @@
       </md-button>
 
       <md-menu-content>
-        <md-menu-item v-if="isAdministrator">
-          <router-link to="/signup" class="user-options-item">
-            <button>Novo Usuário</button>
-          </router-link>
-        </md-menu-item>
-
         <md-menu-item>
           <button class="user-options-item" @click="signout">Sair</button>
         </md-menu-item>
@@ -26,17 +20,10 @@
       <md-content id="search-content" class="md-layout-item md-size-80 md-small-size-100 md-accent">
 
         <div class="md-layout md-gutter">
-          <div class="md-layout-item md-size-40 md-small-size-100">
+          <div class="md-layout-item md-size-70 md-small-size-100">
             <md-field md-inline class="md-layout-item">
               <label>Nome do Arquivo</label>
               <md-input v-model="searchName"></md-input>
-            </md-field>
-          </div>
-
-          <div class="md-layout-item md-size-30 md-small-size-100">
-            <md-field md-inline class="md-layout-item">
-              <label>Empresa</label>
-              <md-input v-model="searchCompany"></md-input>
             </md-field>
           </div>
 
@@ -116,7 +103,7 @@
                 <md-tooltip md-direction="top">Compartilhar</md-tooltip>
               </md-button>
 
-              <md-button class="md-icon-button" @click="openDeleteDialog(userFile.id)" v-if="isAdministrator">
+              <md-button class="md-icon-button" @click="openDeleteDialog(userFile.id)">
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction="top">Remover</md-tooltip>
               </md-button>

@@ -25,3 +25,8 @@
 #loginError {
   background-color: #D32F2F;
 }
+
+#signup-link {
+  margin-right: 184px;
+  color: #237b90;
+}

@@ -29,12 +29,6 @@
             </div>
           </div>
 
-          <md-field :class="getValidationClass('company')">
-            <label for="company">Empresa</label>
-            <md-input type="company" name="company" id="company" autocomplete="company" v-model="form.company" :disabled="sending" />
-            <span class="md-error" v-if="!$v.form.company.required">O nome da empresa é obrigatório</span>
-          </md-field>
-
           <md-field :class="$v.form.email.required ? emailClass : getValidationClass('email')">
             <label for="email">Email</label>
             <md-input type="email" :onkeypress="checkFieldValueExists('email')" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
@@ -54,7 +48,7 @@
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <router-link to="/" id="backward-button">
+          <router-link to="/signin" id="backward-button">
             <md-button class="md-icon-button">
               <md-icon>keyboard_backspace</md-icon>
               <md-tooltip md-direction="top">Voltar</md-tooltip>

@@ -1,3 +1,4 @@
+import router from '@/router'
 import {
   SIGNUP,
   CHECK_FIELD_VALUE_EXISTS,
@@ -27,6 +28,8 @@ export default {
       state.userEmail = payload.userEmail
       state.userSaved = true
       state.sending = false
+
+      router.push('/')
     }
   },
   actions: {

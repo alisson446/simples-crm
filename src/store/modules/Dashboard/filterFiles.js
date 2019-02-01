@@ -7,7 +7,7 @@ export default function filterFiles ({ state }, payload) {
 
   index.setSettings({
     queryType: 'prefixAll',
-    searchableAttributes: ['name', 'company', 'postedIn']
+    searchableAttributes: ['name', 'postedIn']
   })
 
   index.search(payload)

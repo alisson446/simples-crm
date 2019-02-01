@@ -32,7 +32,6 @@ export default function uploadFile ({ state }, file) {
     uploadTask.snapshot.ref.getMetadata().then(function (snapshot) {
       fileDoc.set({
         name: file.name,
-        company: state.authUser.company,
         type: snapshot.contentType,
         downloadUrl: snapshot.downloadURLs[0],
         size: snapshot.size,

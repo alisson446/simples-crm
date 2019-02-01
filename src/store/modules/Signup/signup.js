@@ -1,15 +1,14 @@
-import { secondaryApp, db } from '../../../../api/firebase'
+import { auth, db } from '../../../../api/firebase'
 import { USER_CREATED } from '../../constants'
 
 export default function signup ({ commit, state }, payload) {
-  const { userAccount, name, company, email, password } = payload
+  const { userAccount, name, email, password } = payload
   state.sending = true
 
   return new Promise((resolve, reject) => {
     // Creating authentication token
-    const secondaryAuth = secondaryApp.auth()
 
-    secondaryAuth.createUserWithEmailAndPassword(email, password)
+    auth.createUserWithEmailAndPassword(email, password)
       .then(function (userCreated) {
         const authUserId = userCreated.uid
         const fullPayload = { ...payload, authUserId }
@@ -18,13 +17,11 @@ export default function signup ({ commit, state }, payload) {
         db.doc(`users/${authUserId}`).set({
           userAccount,
           name,
-          company,
           email,
           password
         })
           .then(function () {
             commit(USER_CREATED, fullPayload)
-            secondaryAuth.signOut()
             resolve()
           })
           .catch(function (error) {

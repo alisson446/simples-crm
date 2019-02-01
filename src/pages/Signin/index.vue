@@ -24,6 +24,10 @@
         <md-progress-bar md-mode="indeterminate" v-if="checking" />
 
         <md-card-actions>
+          <router-link to="/signup" id="signup-link">
+            Sem conta? Cadastra-se
+          </router-link>
+
           <md-button type="submit" id="send-button" class="md-raised" :disabled="checking">Entrar</md-button>
         </md-card-actions>
       </md-card>

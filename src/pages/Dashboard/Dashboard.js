@@ -13,7 +13,6 @@ export default {
   name: 'Dashboard',
   data: () => ({
     searchName: null,
-    searchCompany: null,
     date: null,
     dateFormatted: null,
     menu: false,
@@ -31,9 +30,6 @@ export default {
   }),
   watch: {
     searchName: function () {
-      this.filterFiles()
-    },
-    searchCompany: function () {
       this.filterFiles()
     },
     date: function () {
@@ -54,7 +50,6 @@ export default {
       userFiles: state => state.Dashboard.userFiles,
       hasFiles: state => state.Dashboard.userFiles.length !== 0,
       loadingFiles: state => state.Dashboard.loadingFiles,
-      isAdministrator: state => state.Dashboard.authUser.type === 'administrator',
       computedDateFormatted () {
         return this.formatDate(this.date)
       }
@@ -70,9 +65,8 @@ export default {
     },
     filterFiles () {
       const name = this.searchName ? this.searchName : ''
-      const company = this.searchCompany ? this.searchCompany : ''
       const date = this.date ? this.date : ''
-      const query = `${name} ${company} ${date}`
+      const query = `${name} ${date}`
 
       this.$store.dispatch(FILTER_FILES, query)
     },
