@@ -5,7 +5,6 @@ export default function onCheckingFiles ({ state }) {
 
   db.collection('users').doc(state.authUserId).collection('files')
     .onSnapshot(function (docs) {
-      state.userFiles = []
       if (docs.docChanges.length === 0) state.loadingFiles = false
 
       docs.docChanges.forEach(function (change) {
@@ -24,6 +23,8 @@ export default function onCheckingFiles ({ state }) {
             if (fileIndex > -1) {
               state.userFiles.splice(fileIndex, 1)
             }
+
+            state.loadingFiles = false
             break
         }
       })

@@ -1,6 +1,8 @@
 import { db, storageRef } from '../../../../api/firebase'
 
 export default function deleteFile ({ state }, fileId) {
+  state.loadingFiles = true
+
   storageRef.child(`files/${fileId}`).delete()
     .then(function () {
       db.collection('files').doc(fileId).collection('followers').get()
@@ -9,11 +11,8 @@ export default function deleteFile ({ state }, fileId) {
 
           if (followers.length) {
             followers.forEach(function (follower) {
-              db.collection('users').doc(follower.id).collection('files').doc(fileId).delete()
-                .then(() => {
-                  db.collection('files').doc(fileId).collection('followers').doc(follower.id).delete()
-                })
-                .catch(console.error)
+              db.collection('users').doc(follower.id).collection('files').doc(fileId).delete().catch(console.error)
+              db.collection('files').doc(fileId).collection('followers').doc(follower.id).delete().catch(console.error)
             })
           }
         })

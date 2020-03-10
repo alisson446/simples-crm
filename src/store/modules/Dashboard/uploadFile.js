@@ -2,6 +2,8 @@ import moment from 'moment'
 import { db, storageRef } from '../../../../api/firebase'
 
 export default function uploadFile ({ state }, file) {
+  state.loadingFiles = true
+
   const blobFile = new Blob(
     [file],
     { type: file.type }

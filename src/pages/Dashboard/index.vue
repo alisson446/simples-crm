@@ -79,7 +79,7 @@
     <!-- end Form Search -->
 
     <!-- start Files Content -->
-    <div id="files-content" v-if="hasFiles">
+    <div id="files-content" v-if="hasFiles && !loadingFiles">
       <md-card class="card-file" v-for="userFile in userFiles" :key="userFile.id">
         <md-card-media-cover md-solid>
           <md-card-media md-ratio="1:1">
